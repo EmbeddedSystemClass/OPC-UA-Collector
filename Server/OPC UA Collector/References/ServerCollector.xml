@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<UANodeSet LastModified="2020-02-23T12:32:35.012Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns:si="http://www.siemens.com/OPCUA/2017/SimaticNodeSetExtensions" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<UANodeSet LastModified="2020-02-23T16:36:26.347Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://opcfoundation.org/UA/2011/03/UANodeSet.xsd" xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd" xmlns:si="http://www.siemens.com/OPCUA/2017/SimaticNodeSetExtensions" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <NamespaceUris>
         <Uri>http://htw-berlin.de/opcua/Collector</Uri>
     </NamespaceUris>
@@ -282,7 +282,7 @@
         </Value>
     </UAVariable>
     <UAMethod NodeId="ns=1;i=1019" BrowseName="1:getObjectRootNode">
-        <DisplayName>getObjectRootNode</DisplayName>
+        <DisplayName>getRootObjectNode</DisplayName>
         <References>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1009</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -351,7 +351,7 @@
         </Value>
     </UAVariable>
     <UAMethod NodeId="ns=1;i=1022" BrowseName="1:getToken">
-        <DisplayName>getToken</DisplayName>
+        <DisplayName>authenticate</DisplayName>
         <References>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1009</Reference>
             <Reference ReferenceType="HasModellingRule">i=80</Reference>
@@ -448,7 +448,6 @@
     </UAObject>
     <UAMethod NodeId="ns=1;i=1132" BrowseName="1:addNamespace">
         <DisplayName>addNamespace</DisplayName>
-        <Description>add Namespace if not exist</Description>
         <References>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1081</Reference>
         </References>
@@ -611,17 +610,65 @@
             </uax:ListOfExtensionObject>
         </Value>
     </UAVariable>
-    <UAMethod NodeId="ns=1;i=1138" BrowseName="1:getObjectRootNode">
-        <DisplayName>getObjectRootNode</DisplayName>
+    <UAMethod NodeId="ns=1;i=1013" BrowseName="1:registerServer">
+        <DisplayName>registerServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1009</Reference>
+            <Reference ReferenceType="HasModellingRule">i=80</Reference>
+        </References>
+    </UAMethod>
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1014" ArrayDimensions="1" BrowseName="InputArguments">
+        <DisplayName>InputArguments</DisplayName>
+        <Description>the definition of the input argument of method 1:ServerCollector.1:registerServer</Description>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1013</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasModellingRule">i=78</Reference>
+        </References>
+        <Value>
+            <uax:ListOfExtensionObject>
+                <uax:ExtensionObject>
+                    <uax:TypeId>
+                        <uax:Identifier>i=297</uax:Identifier>
+                    </uax:TypeId>
+                    <uax:Body>
+                        <uax:Argument>
+                            <uax:Name>identifer</uax:Name>
+                            <uax:DataType>
+                                <uax:Identifier>i=24</uax:Identifier>
+                            </uax:DataType>
+                            <uax:ValueRank>-1</uax:ValueRank>
+                            <uax:ArrayDimensions/>
+                            <uax:Description/>
+                        </uax:Argument>
+                    </uax:Body>
+                </uax:ExtensionObject>
+            </uax:ListOfExtensionObject>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1018" ArrayDimensions="0" BrowseName="OutputArguments">
+        <DisplayName>OutputArguments</DisplayName>
+        <Description>the definition of the output arguments of method 1:ServerCollector.1:registerServer</Description>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1013</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+            <Reference ReferenceType="HasModellingRule">i=78</Reference>
+        </References>
+        <Value>
+            <uax:ListOfExtensionObject/>
+        </Value>
+    </UAVariable>
+    <UAMethod NodeId="ns=1;i=1028" BrowseName="1:getObjectRootNode">
+        <DisplayName>getRootObjectNode</DisplayName>
         <References>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1081</Reference>
         </References>
     </UAMethod>
-    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1139" ArrayDimensions="1" BrowseName="InputArguments">
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1029" ArrayDimensions="1" BrowseName="InputArguments">
         <DisplayName>InputArguments</DisplayName>
         <Description>the definition of the input argument of method 1:ServerCollector.1:getObjectRootNode</Description>
         <References>
-            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1138</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1028</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
@@ -647,11 +694,11 @@
             </uax:ListOfExtensionObject>
         </Value>
     </UAVariable>
-    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1140" ArrayDimensions="1" BrowseName="OutputArguments">
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1030" ArrayDimensions="1" BrowseName="OutputArguments">
         <DisplayName>OutputArguments</DisplayName>
         <Description>the definition of the output arguments of method 1:ServerCollector.1:getObjectRootNode</Description>
         <References>
-            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1138</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1028</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
@@ -677,17 +724,17 @@
             </uax:ListOfExtensionObject>
         </Value>
     </UAVariable>
-    <UAMethod NodeId="ns=1;i=1141" BrowseName="1:getToken">
-        <DisplayName>getToken</DisplayName>
+    <UAMethod NodeId="ns=1;i=1031" BrowseName="1:getToken">
+        <DisplayName>authenticate</DisplayName>
         <References>
             <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1081</Reference>
         </References>
     </UAMethod>
-    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1142" ArrayDimensions="1" BrowseName="InputArguments">
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1032" ArrayDimensions="1" BrowseName="InputArguments">
         <DisplayName>InputArguments</DisplayName>
         <Description>the definition of the input argument of method 1:ServerCollector.1:getToken</Description>
         <References>
-            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1141</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
@@ -713,11 +760,11 @@
             </uax:ListOfExtensionObject>
         </Value>
     </UAVariable>
-    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1143" ArrayDimensions="1" BrowseName="OutputArguments">
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1033" ArrayDimensions="1" BrowseName="OutputArguments">
         <DisplayName>OutputArguments</DisplayName>
         <Description>the definition of the output arguments of method 1:ServerCollector.1:getToken</Description>
         <References>
-            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1141</Reference>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1031</Reference>
             <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
         </References>
         <Value>
@@ -739,6 +786,51 @@
                     </uax:Body>
                 </uax:ExtensionObject>
             </uax:ListOfExtensionObject>
+        </Value>
+    </UAVariable>
+    <UAMethod NodeId="ns=1;i=1034" BrowseName="1:registerServer">
+        <DisplayName>registerServer</DisplayName>
+        <References>
+            <Reference ReferenceType="HasComponent" IsForward="false">ns=1;i=1081</Reference>
+        </References>
+    </UAMethod>
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1035" ArrayDimensions="1" BrowseName="InputArguments">
+        <DisplayName>InputArguments</DisplayName>
+        <Description>the definition of the input argument of method 1:ServerCollector.1:registerServer</Description>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1034</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+        <Value>
+            <uax:ListOfExtensionObject>
+                <uax:ExtensionObject>
+                    <uax:TypeId>
+                        <uax:Identifier>i=297</uax:Identifier>
+                    </uax:TypeId>
+                    <uax:Body>
+                        <uax:Argument>
+                            <uax:Name>identifer</uax:Name>
+                            <uax:DataType>
+                                <uax:Identifier>i=24</uax:Identifier>
+                            </uax:DataType>
+                            <uax:ValueRank>-1</uax:ValueRank>
+                            <uax:ArrayDimensions/>
+                            <uax:Description/>
+                        </uax:Argument>
+                    </uax:Body>
+                </uax:ExtensionObject>
+            </uax:ListOfExtensionObject>
+        </Value>
+    </UAVariable>
+    <UAVariable DataType="i=296" ValueRank="1" NodeId="ns=1;i=1036" ArrayDimensions="0" BrowseName="OutputArguments">
+        <DisplayName>OutputArguments</DisplayName>
+        <Description>the definition of the output arguments of method 1:ServerCollector.1:registerServer</Description>
+        <References>
+            <Reference ReferenceType="HasProperty" IsForward="false">ns=1;i=1034</Reference>
+            <Reference ReferenceType="HasTypeDefinition">i=68</Reference>
+        </References>
+        <Value>
+            <uax:ListOfExtensionObject/>
         </Value>
     </UAVariable>
 </UANodeSet>
