@@ -118,165 +118,7 @@ namespace ServerCollector
 
             }
         }
-        #region Controller
-        private void fillCollector(NodeStateCollection nodes)
-        {
-            if (nodes.Equals(null))
-            {
-                createCollectorObject();
-                return;
-            }
-
-            Dictionary<NodeId, NodeState> nodeDic = new Dictionary<NodeId, NodeState>();
-            foreach (NodeState node in nodes)
-            {
-                nodeDic.Add(node.NodeId, node);
-            }
-            NodeState Controller = nodeDic[new NodeId((int)Collector.ObjectsIDs.ObjectController, NamespaceIndex)];
-
-            //properties für die addNamespace methode
-
-            Collector.ObjectsIDs[] methodsid = { 
-                Collector.ObjectsIDs.ObjectControlleraddNamespace, 
-                Collector.ObjectsIDs.ObjectControlleraddObjectNode, 
-                Collector.ObjectsIDs.ObjectControllergetObjectRootNode, 
-                Collector.ObjectsIDs.ObjectControllergetToken
-            };
-            foreach (Collector.ObjectsIDs n in methodsid)
-            {
-                GenericMethodCalledEventHandler m;
-                MethodState addNamespaceMethod = (MethodState)nodeDic[new NodeId((ushort)n, NamespaceIndex)];
-                NodeState input = nodeDic[new NodeId((ushort)(n + 1), NamespaceIndex)];
-                NodeState output = nodeDic[new NodeId((ushort)(n + 2), NamespaceIndex)];
-                switch (n)
-                {
-                    case Collector.ObjectsIDs.ObjectControlleraddNamespace:
-                        m = addNamespace;
-                        break;
-                    case Collector.ObjectsIDs.ObjectControlleraddObjectNode:
-                        m = addObjectNode;
-                        break;
-                    case Collector.ObjectsIDs.ObjectControllergetObjectRootNode:
-                        m = getObjectRootNode;
-                        break;
-                    case Collector.ObjectsIDs.ObjectControllergetToken:
-                        m = getToken;
-                        break;
-                    default:
-                        m = ControllerMethodStandard;
-                        break;
-                }
-                createMethod(Controller, addNamespaceMethod, (PropertyState)input, (PropertyState)output, m);
-            }
-        }
-        private void createCollectorObject()
-        {
-            throw new NotImplementedException();
-        }
-        private void createMethod(NodeState parent, MethodState method, PropertyState inputs, PropertyState output,GenericMethodCalledEventHandler methodToBeCalled)
-        {
-
-            // a method to start the process.
-            MethodState start = new MethodState(parent);
-
-            //start.NodeId = new NodeId(2003, NamespaceIndex);
-            start.NodeId = method.NodeId;
-            start.BrowseName = method.BrowseName;
-            start.DisplayName = method.BrowseName.Name;
-            //start.BrowseName = new QualifiedName("Start", NamespaceIndex);
-            //start.DisplayName = start.BrowseName.Name;
-            start.ReferenceTypeId = ReferenceTypeIds.HasComponent;
-            start.UserExecutable = true;
-            start.Executable = true;
-
-            // add input arguments.
-            start.InputArguments = new PropertyState<Argument[]>(start);
-            start.InputArguments.NodeId = inputs.NodeId;
-            start.InputArguments.BrowseName = BrowseNames.InputArguments;
-            start.InputArguments.DisplayName = start.InputArguments.BrowseName.Name;
-            start.InputArguments.TypeDefinitionId = VariableTypeIds.PropertyType;
-            start.InputArguments.ReferenceTypeId = ReferenceTypeIds.HasProperty;
-            start.InputArguments.DataType = DataTypeIds.Argument;
-            start.InputArguments.ValueRank = ValueRanks.OneDimension;
-
-            List<Argument> args = new List<Argument>();
-            Argument arg;
-            foreach (ExtensionObject ext in (ExtensionObject[])inputs.Value)
-            {
-                arg = (Argument)ext.Body;
-                args.Add(arg);
-            }
-            start.InputArguments.Value = args.ToArray();
-
-            // add output arguments.
-            start.OutputArguments = new PropertyState<Argument[]>(start);
-            start.OutputArguments.NodeId = output.NodeId;
-            start.OutputArguments.BrowseName = BrowseNames.OutputArguments;
-            start.OutputArguments.DisplayName = start.OutputArguments.BrowseName.Name;
-            start.OutputArguments.TypeDefinitionId = VariableTypeIds.PropertyType;
-            start.OutputArguments.ReferenceTypeId = ReferenceTypeIds.HasProperty;
-            start.OutputArguments.DataType = DataTypeIds.Argument;
-            start.OutputArguments.ValueRank = ValueRanks.OneDimension;
-
-            args = new List<Argument>();
-            foreach (ExtensionObject ext in (ExtensionObject[])inputs.Value)
-            {
-                arg = (Argument)ext.Body;
-                args.Add(arg);
-            }
-            start.OutputArguments.Value = args.ToArray();
-
-            parent.AddChild(start);
-            AddPredefinedNode(SystemContext, parent);
-            // save in dictionary. 
-            //AddPredefinedNode(SystemContext, process);
-
-            // set up method handlers. 
-            start.OnCallMethod = new GenericMethodCalledEventHandler(addNamespace);
-        }
-        #endregion
-
-        #region Controller Methods
-        //Fügt einen vom Client übergebene Namespace zum Server hinzu
-        public ServiceResult ControllerMethodStandard(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-            //System.Windows.Forms.MessageBox.Show("test");
-
-            return StatusCodes.BadNotImplemented;
-        }
-        public ServiceResult addNamespace(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addNamespace");
-            if (inputsArguments[0].ToString() == null || inputsArguments[0].ToString() == "")
-                return StatusCodes.BadArgumentsMissing;
-            ushort index = SystemContext.NamespaceUris.GetIndexOrAppend(inputsArguments[0].ToString());
-            context.SessionId.ToString();
-            outputArguments[0] = index.ToString();
-            return StatusCodes.Good;
-            //context.SessionId;
-        }
-
-        public ServiceResult addObjectNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-
-            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addObjectNode");
-            return StatusCodes.BadNotImplemented;
-        }
-        public ServiceResult getToken(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-
-            Debug.WriteLine("called: " + method.DisplayName.Text + " ; getToken");
-            return StatusCodes.BadNotImplemented;
-        }
-        public ServiceResult getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-            context.SessionId
-            Debug.WriteLine("called: " + method.DisplayName.Text + " ; getObjectRootNode");
-            return StatusCodes.BadNotImplemented;
-        }
-
-
-        #endregion
+        
         /// <summary>
         /// Import NodeSets from xml
         /// </summary>
@@ -368,8 +210,205 @@ namespace ServerCollector
         }
 
         #endregion
-        #region Private Fields
+        #region Collector helpers
+        private void addNode(NodeState parent,BaseObjectState child)
+        {
+            parent.AddChild(child);
+            AddPredefinedNode(SystemContext ,child);
+        }
+        private void createMethod(NodeState parent, MethodState method, PropertyState inputs, PropertyState output, GenericMethodCalledEventHandler methodToBeCalled)
+        {
 
+            // a method to start the process.
+            MethodState start = new MethodState(parent);
+
+            start.NodeId = method.NodeId;
+            start.BrowseName = method.BrowseName;
+            start.DisplayName = method.BrowseName.Name;
+            start.ReferenceTypeId = ReferenceTypeIds.HasComponent;
+            start.UserExecutable = true;
+            start.Executable = true;
+
+            // add input arguments.
+            start.InputArguments = new PropertyState<Argument[]>(start);
+            start.InputArguments.NodeId = inputs.NodeId;
+            start.InputArguments.BrowseName = BrowseNames.InputArguments;
+            start.InputArguments.DisplayName = start.InputArguments.BrowseName.Name;
+            start.InputArguments.TypeDefinitionId = VariableTypeIds.PropertyType;
+            start.InputArguments.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+            start.InputArguments.DataType = DataTypeIds.Argument;
+            start.InputArguments.ValueRank = ValueRanks.OneDimension;
+
+            List<Argument> args = new List<Argument>();
+            Argument arg;
+            foreach (ExtensionObject ext in (ExtensionObject[])inputs.Value)
+            {
+                arg = (Argument)ext.Body;
+                args.Add(arg);
+            }
+            start.InputArguments.Value = args.ToArray();
+
+            // add output arguments.
+            start.OutputArguments = new PropertyState<Argument[]>(start);
+            start.OutputArguments.NodeId = output.NodeId;
+            start.OutputArguments.BrowseName = BrowseNames.OutputArguments;
+            start.OutputArguments.DisplayName = start.OutputArguments.BrowseName.Name;
+            start.OutputArguments.TypeDefinitionId = VariableTypeIds.PropertyType;
+            start.OutputArguments.ReferenceTypeId = ReferenceTypeIds.HasProperty;
+            start.OutputArguments.DataType = DataTypeIds.Argument;
+            start.OutputArguments.ValueRank = ValueRanks.OneDimension;
+
+            args = new List<Argument>();
+            foreach (ExtensionObject ext in (ExtensionObject[])inputs.Value)
+            {
+                arg = (Argument)ext.Body;
+                args.Add(arg);
+            }
+            start.OutputArguments.Value = args.ToArray();
+
+            parent.AddChild(start);
+            AddPredefinedNode(SystemContext, parent);
+            // save in dictionary. 
+            //AddPredefinedNode(SystemContext, process);
+
+            // set up method handlers. 
+            start.OnCallMethod = new GenericMethodCalledEventHandler(methodToBeCalled);
+        }
+        private void fillCollector(NodeStateCollection nodes)
+        {
+            if (nodes.Equals(null))
+            {
+                createCollectorObject();
+                return;
+            }
+
+            Dictionary<NodeId, NodeState> nodeDic = new Dictionary<NodeId, NodeState>();
+            foreach (NodeState node in nodes)
+            {
+                nodeDic.Add(node.NodeId, node);
+            }
+            NodeState Controller = nodeDic[new NodeId((int)Collector.ObjectsIDs.ObjectController, NamespaceIndex)];
+
+            //properties for addNamespace methodes
+
+            Collector.ObjectsIDs[] methodsid = {
+                Collector.ObjectsIDs.ObjectControlleraddNamespace,
+                Collector.ObjectsIDs.ObjectControlleraddObjectNode,
+                Collector.ObjectsIDs.ObjectControllergetObjectRootNode,
+                Collector.ObjectsIDs.ObjectControllerauthenticate,
+                Collector.ObjectsIDs.ObjectControllerregisterServer
+            };
+            foreach (Collector.ObjectsIDs n in methodsid)
+            {
+                GenericMethodCalledEventHandler m;
+                MethodState addNamespaceMethod = (MethodState)nodeDic[new NodeId((ushort)n, NamespaceIndex)];
+                NodeState input = nodeDic[new NodeId((ushort)(n + 1), NamespaceIndex)];
+                NodeState output = nodeDic[new NodeId((ushort)(n + 2), NamespaceIndex)];
+                switch (n)
+                {
+                    case Collector.ObjectsIDs.ObjectControlleraddNamespace:
+                        m = addNamespace;
+                        break;
+                    case Collector.ObjectsIDs.ObjectControlleraddObjectNode:
+                        m = addObjectNode;
+                        break;
+                    case Collector.ObjectsIDs.ObjectControllergetObjectRootNode:
+                        m = getObjectRootNode;
+                        break;
+                    case Collector.ObjectsIDs.ObjectControllerauthenticate:
+                        m = authenticate;
+                        break;
+                    default:
+                        m = ControllerMethodStandard;
+                        break;
+                }
+                createMethod(Controller, addNamespaceMethod, (PropertyState)input, (PropertyState)output, m);
+            }
+            //machines Folder
+            machines = (BaseObjectState)nodeDic[new NodeId((int)Collector.ObjectsIDs.FolderMachines, NamespaceIndex)];
+            //ControllerObjectRoot ObjectType
+            ControllerObject = (BaseObjectTypeState)nodeDic[new NodeId((int)Collector.ObjectsIDs.TypeControllerObjectRoot, NamespaceIndex)];
+        }
+        private void createCollectorObject()
+        {
+            throw new NotImplementedException();
+        }
+        private void addCollectorRootObject(ClientOPC client,string name)
+        {
+            BaseObjectState objRoot = new BaseObjectState(machines);
+            objRoot.TypeDefinitionId = ControllerObject.NodeId;
+            objRoot.DisplayName = name;
+            objRoot.BrowseName = new QualifiedName(name, NamespaceIndex);
+            addNode(objRoot,machines);
+        }
+        #endregion
+        #region Controller Methods
+        //Fügt einen vom Client übergebene Namespace zum Server hinzu
+        public ServiceResult ControllerMethodStandard(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            //System.Windows.Forms.MessageBox.Show("test");
+
+            return StatusCodes.BadNotImplemented;
+        }
+        public ServiceResult addNamespace(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addNamespace");
+            if (inputsArguments[0].ToString() == null || inputsArguments[0].ToString() == "")
+                return StatusCodes.BadArgumentsMissing;
+            ushort index = SystemContext.NamespaceUris.GetIndexOrAppend(inputsArguments[0].ToString());
+            context.SessionId.ToString();
+            outputArguments[0] = index.ToString();
+            return StatusCodes.Good;
+            //context.SessionId;
+        }
+
+        public ServiceResult addObjectNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+
+            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addObjectNode");
+            return StatusCodes.BadNotImplemented;
+        }
+        public ServiceResult authenticate(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            ClientOPC cl;
+            string token = inputsArguments[0].ToString();
+            if (!ServerCollector.Clients.token_Client.TryGetValue(token, out cl))
+            {
+                return StatusCodes.BadAggregateInvalidInputs;
+            }
+            cl.authenticate(token, context.SessionId);
+            return StatusCodes.Good;
+        }
+        public ServiceResult getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            ClientOPC client = Clients.clients[0];
+            addCollectorRootObject(client, "test");
+            return StatusCodes.BadNotImplemented;
+            //try to get client
+            if (!Clients.session_client.TryGetValue(context.SessionId, out client))
+            {
+                //No Client for this session id
+                return StatusCodes.BadSessionIdInvalid;
+            }
+            //test if client root node is alread set
+            if (!client.isRootset||true)
+            {
+                addCollectorRootObject(client,"test");
+            }
+            //NodeState nodest = client.RootObject;
+            //FileStream fs = new FileStream(context.SessionId.ToString() + ".xml",FileMode.Create);
+            //XmlEncoder xml = new XmlEncoder(ServiceMessageContext.GlobalContext);
+            //nodest.SaveAsXml(context,xml);
+            //Debug.WriteLine(xml.ToString());
+
+            Debug.WriteLine("called: " + method.DisplayName.Text + " ; getObjectRootNode");
+            return StatusCodes.BadNotImplemented;
+        }
+
+        #endregion
+        #region Private Fields
+        BaseObjectState machines;
+        BaseObjectTypeState ControllerObject;
         #endregion
     }
 }
