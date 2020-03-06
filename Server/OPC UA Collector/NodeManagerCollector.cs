@@ -96,6 +96,7 @@ namespace ServerCollector
         /// </remarks>
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
         {
+
             lock (Lock)
             {
                 // ensure the process object can be found via the server object. 
@@ -211,11 +212,7 @@ namespace ServerCollector
 
         #endregion
         #region Collector helpers
-        private void addNode(NodeState parent,BaseObjectState child)
-        {
-            parent.AddChild(child);
-            AddPredefinedNode(SystemContext ,child);
-        }
+        
         private void createMethod(NodeState parent, MethodState method, PropertyState inputs, PropertyState output, GenericMethodCalledEventHandler methodToBeCalled)
         {
 
@@ -318,6 +315,9 @@ namespace ServerCollector
                     case Collector.ObjectsIDs.ObjectControllerauthenticate:
                         m = authenticate;
                         break;
+                    case Collector.ObjectsIDs.ObjectControllerregisterServer:
+                        m = registerServer;
+                        break;
                     default:
                         m = ControllerMethodStandard;
                         break;
@@ -339,7 +339,9 @@ namespace ServerCollector
             objRoot.TypeDefinitionId = ControllerObject.NodeId;
             objRoot.DisplayName = name;
             objRoot.BrowseName = new QualifiedName(name, NamespaceIndex);
-            addNode(objRoot,machines);
+            objRoot.NodeId = new NodeId(1234);
+            machines.AddChild(objRoot);
+
         }
         #endregion
         #region Controller Methods
@@ -382,8 +384,6 @@ namespace ServerCollector
         public ServiceResult getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
             ClientOPC client = Clients.clients[0];
-            addCollectorRootObject(client, "test");
-            return StatusCodes.BadNotImplemented;
             //try to get client
             if (!Clients.session_client.TryGetValue(context.SessionId, out client))
             {
@@ -404,11 +404,28 @@ namespace ServerCollector
             Debug.WriteLine("called: " + method.DisplayName.Text + " ; getObjectRootNode");
             return StatusCodes.BadNotImplemented;
         }
-
+public ServiceResult registerServer(ISystemContext contex, MethodState method, IList<object> inputArguments, IList<object> outputarguments)
+        {
+            IEnumerator<object> inputs = inputArguments.GetEnumerator();
+            inputs.MoveNext();
+            string token=ClientToken.getClientToken(inputs.Current.ToString());
+            ClientOPC client;
+            if(Clients.token_Client.TryGetValue(token,out client))
+            {
+                outputarguments[0] = token;
+                return StatusCodes.Good;
+            }
+            client = new ClientOPC(inputArguments[0], contex.SessionId);
+            Clients.addClient(client);
+            outputarguments[0] = client.token;
+            addCollectorRootObject(client,inputs.MoveNext()?inputs.Current.ToString():contex.SessionId.ToString());
+            return StatusCodes.Good;
+        }
         #endregion
         #region Private Fields
         BaseObjectState machines;
         BaseObjectTypeState ControllerObject;
+        IReference[] externalRef;
         #endregion
     }
 }
