@@ -51,10 +51,10 @@
             this.connectServerCtrl1.TabIndex = 14;
             this.connectServerCtrl1.UserIdentity = null;
             this.connectServerCtrl1.UseSecurity = true;
-            this.connectServerCtrl1.ReconnectStarting += new System.EventHandler(this.Server_ReconnectStarting);
-            this.connectServerCtrl1.ReconnectComplete += new System.EventHandler(this.Server_ReconnectComplete);
-            this.connectServerCtrl1.ConnectComplete += new System.EventHandler(this.Server_ConnectComplete);
-            this.connectServerCtrl1.Load += new System.EventHandler(this.connectServerCtrl1_Load);
+            //this.connectServerCtrl1.ReconnectStarting += new System.EventHandler(this.Server_ReconnectStarting);
+            //this.connectServerCtrl1.ReconnectComplete += new System.EventHandler(this.Server_ReconnectComplete);
+            //this.connectServerCtrl1.ConnectComplete += new System.EventHandler(this.Server_ConnectComplete);
+            //this.connectServerCtrl1.Load += new System.EventHandler(this.connectServerCtrl1_Load);
             //this.ConnectServerCtrl = new Opc.Ua.Client.Controls.ConnectServerCtrl();
             this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();

@@ -11,7 +11,7 @@ using Opc.Ua.Server.Controls;
 
 using System.Windows.Forms;
 
-namespace OPCDemo
+namespace ServerCollector
 {
     class Program
     {
