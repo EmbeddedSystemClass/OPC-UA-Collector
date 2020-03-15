@@ -7,7 +7,7 @@
     <ProjectGuid>{3B6C805E-2F2A-459B-97C8-5C8487E34129}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>ServerCollector</RootNamespace>
-    <AssemblyName>OPCUA_DFT_Server</AssemblyName>
+    <AssemblyName>OPC_UA_Collector</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
