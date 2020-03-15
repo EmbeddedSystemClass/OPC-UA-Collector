@@ -7,14 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Opc.Ua.Configuration;
 namespace TestServer
 {
-    public partial class Form1 : Form
+    public partial class mainForm : Form
     {
-        public Form1()
+        public mainForm()
         {
             InitializeComponent();
+        }
+        public mainForm(ApplicationInstance application)
+        {
+
         }
     }
 }

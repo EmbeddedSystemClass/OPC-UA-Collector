@@ -71,6 +71,9 @@
     <Reference Include="Opc.Ua.Core">
       <HintPath>imports\Opc.Ua.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Opc.Ua.SampleControls">
+      <HintPath>..\References\OPCUA DLL's\Opc.Ua.SampleControls.dll</HintPath>
+    </Reference>
     <Reference Include="Opc.Ua.Server">
       <HintPath>imports\Opc.Ua.Server.dll</HintPath>
     </Reference>

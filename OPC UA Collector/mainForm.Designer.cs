@@ -34,9 +34,11 @@
             this.serverUtilsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ServerDiagnosticPanel = new System.Windows.Forms.Panel();
             this.ServerDiagnosticsCTRL = new Opc.Ua.Server.Controls.ServerDiagnosticsCtrl();
-            this.BrowseCTRL = new Opc.Ua.Client.Controls.BrowseTreeCtrl();
+            this.BrowseCTRL = new Opc.Ua.Client.Controls.BrowseNodeCtrl();
+            this.connectServerCtrl1 = new Opc.Ua.Client.Controls.ConnectServerCtrl();
             this.browseTreeCtrlBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.NodeInspector = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.serverDiagnosticsCtrlBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverFormBindingSource)).BeginInit();
@@ -44,6 +46,7 @@
             this.ServerDiagnosticPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.browseTreeCtrlBindingSource)).BeginInit();
             this.NodeInspector.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // serverDiagnosticsCtrlBindingSource
@@ -64,7 +67,7 @@
             this.ServerDiagnosticPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ServerDiagnosticPanel.Location = new System.Drawing.Point(0, 0);
             this.ServerDiagnosticPanel.Name = "ServerDiagnosticPanel";
-            this.ServerDiagnosticPanel.Size = new System.Drawing.Size(931, 502);
+            this.ServerDiagnosticPanel.Size = new System.Drawing.Size(1092, 502);
             this.ServerDiagnosticPanel.TabIndex = 0;
             // 
             // ServerDiagnosticsCTRL
@@ -76,15 +79,39 @@
             // 
             // BrowseCTRL
             // 
-            this.BrowseCTRL.AttributesCTRL = null;
-            this.BrowseCTRL.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.BrowseCTRL.EnableDragging = false;
-            this.BrowseCTRL.Location = new System.Drawing.Point(0, 131);
-            this.BrowseCTRL.MinimumSize = new System.Drawing.Size(325, 216);
+            this.BrowseCTRL.AttributesListCollapsed = false;
+            this.BrowseCTRL.AutoSize = true;
+            this.BrowseCTRL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BrowseCTRL.Location = new System.Drawing.Point(0, 0);
+            this.BrowseCTRL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.BrowseCTRL.MinimumSize = new System.Drawing.Size(0, 100);
             this.BrowseCTRL.Name = "BrowseCTRL";
-            this.BrowseCTRL.ReferencesCTRL = null;
-            this.BrowseCTRL.Size = new System.Drawing.Size(447, 371);
-            this.BrowseCTRL.TabIndex = 0;
+            this.BrowseCTRL.Size = new System.Drawing.Size(516, 449);
+            this.BrowseCTRL.SplitterDistance = 387;
+            this.BrowseCTRL.TabIndex = 6;
+            this.BrowseCTRL.View = null;
+            // 
+            // connectServerCtrl1
+            // 
+            this.connectServerCtrl1.Configuration = null;
+            this.connectServerCtrl1.DisableDomainCheck = false;
+            this.connectServerCtrl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.connectServerCtrl1.Location = new System.Drawing.Point(0, 24);
+            this.connectServerCtrl1.MaximumSize = new System.Drawing.Size(2048, 23);
+            this.connectServerCtrl1.MinimumSize = new System.Drawing.Size(500, 23);
+            this.connectServerCtrl1.Name = "connectServerCtrl1";
+            this.connectServerCtrl1.PreferredLocales = null;
+            this.connectServerCtrl1.ServerStatusControl = null;
+            this.connectServerCtrl1.ServerUrl = "";
+            this.connectServerCtrl1.SessionName = null;
+            this.connectServerCtrl1.Size = new System.Drawing.Size(606, 23);
+            this.connectServerCtrl1.StatusStrip = null;
+            this.connectServerCtrl1.StatusUpateTimeControl = null;
+            this.connectServerCtrl1.TabIndex = 14;
+            this.connectServerCtrl1.UserIdentity = null;
+            this.connectServerCtrl1.UseSecurity = true;
+            this.connectServerCtrl1.ReconnectComplete += new System.EventHandler(this.Server_ConnectComplete);
+            this.connectServerCtrl1.ConnectComplete += new System.EventHandler(this.Server_ConnectComplete);
             // 
             // browseTreeCtrlBindingSource
             // 
@@ -92,13 +119,23 @@
             // 
             // NodeInspector
             // 
+            this.NodeInspector.Controls.Add(this.panel1);
+            this.NodeInspector.Controls.Add(this.connectServerCtrl1);
             this.NodeInspector.Controls.Add(this.label1);
-            this.NodeInspector.Controls.Add(this.BrowseCTRL);
             this.NodeInspector.Dock = System.Windows.Forms.DockStyle.Right;
-            this.NodeInspector.Location = new System.Drawing.Point(484, 0);
+            this.NodeInspector.Location = new System.Drawing.Point(486, 0);
+            this.NodeInspector.MinimumSize = new System.Drawing.Size(0, 300);
             this.NodeInspector.Name = "NodeInspector";
-            this.NodeInspector.Size = new System.Drawing.Size(447, 502);
+            this.NodeInspector.Size = new System.Drawing.Size(606, 502);
             this.NodeInspector.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.BrowseCTRL);
+            this.panel1.Location = new System.Drawing.Point(3, 53);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(516, 449);
+            this.panel1.TabIndex = 15;
             // 
             // label1
             // 
@@ -106,7 +143,7 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(447, 24);
+            this.label1.Size = new System.Drawing.Size(606, 24);
             this.label1.TabIndex = 1;
             this.label1.Text = "Client Connector";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -115,7 +152,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(931, 502);
+            this.ClientSize = new System.Drawing.Size(1092, 502);
             this.Controls.Add(this.NodeInspector);
             this.Controls.Add(this.ServerDiagnosticPanel);
             this.Name = "mainForm";
@@ -126,12 +163,15 @@
             this.ServerDiagnosticPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.browseTreeCtrlBindingSource)).EndInit();
             this.NodeInspector.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private Opc.Ua.Client.Controls.BrowseTreeCtrl BrowseCTRL;
+        private Opc.Ua.Client.Controls.ConnectServerCtrl connectServerCtrl1;
+        private Opc.Ua.Client.Controls.BrowseNodeCtrl BrowseCTRL;
         private Opc.Ua.Server.Controls.ServerDiagnosticsCtrl ServerDiagnosticsCTRL;
         private System.Windows.Forms.BindingSource serverDiagnosticsCtrlBindingSource;
         private System.Windows.Forms.BindingSource serverFormBindingSource;
@@ -140,5 +180,6 @@
         private System.Windows.Forms.BindingSource browseTreeCtrlBindingSource;
         private System.Windows.Forms.Panel NodeInspector;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel1;
     }
 }

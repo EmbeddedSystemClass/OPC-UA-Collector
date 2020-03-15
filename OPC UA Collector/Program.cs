@@ -27,7 +27,11 @@ namespace ServerCollector
             application.ApplicationType = ApplicationType.Server;
             application.ConfigSectionName = "CollectorServer";
 
-            
+
+            ApplicationInstance applicationclient = new ApplicationInstance();
+            applicationclient.ApplicationType = ApplicationType.Client;
+            applicationclient.ConfigSectionName = "Client";
+
 
             try
             {
@@ -50,17 +54,17 @@ namespace ServerCollector
                 // load the application configuration.
                 application.LoadApplicationConfiguration(false).Wait();
                 //application.ApplicationConfiguration = getConfiguration();
-                
+                applicationclient.LoadApplicationConfiguration(false).Wait();
 
                 // check the application certificate.
                 application.CheckApplicationInstanceCertificate(false, 0).Wait();
-
+                applicationclient.CheckApplicationInstanceCertificate(false, 0).Wait();
                 // start the server.
                 application.Start(server).Wait();
 
                 // run the application interactively.
                 //Application.Run(new Opc.Ua.Server.Controls.ServerForm(application));
-                Application.Run(new mainForm(application));
+                Application.Run(new mainForm(application,applicationclient));
                 //Console.ReadLine();
                 
             }

@@ -23,9 +23,12 @@
 
                 ApplicationInstance.MessageDlg = new ApplicationMessageDlg();
                 ApplicationInstance application = new ApplicationInstance();
-                application.ApplicationType = ApplicationType.Client;
+                application.ApplicationType = ApplicationType.Server;
                 application.ConfigSectionName = "ConnectorClient";
 
+                ApplicationInstance applicationclient = new ApplicationInstance();
+            applicationclient.ApplicationType = ApplicationType.Client;
+            applicationclient.ConfigSectionName = "Client";
                 try
                 {
                     // process and command line arguments.
@@ -35,14 +38,15 @@
                     }
                 // load the application configuration.
                 application.LoadApplicationConfiguration(false).Wait();
+                applicationclient.LoadApplicationConfiguration(false).Wait();
 
                 // check the application certificate.
-                //application.CheckApplicationInstanceCertificate(false, 0).Wait();
-                
+                application.CheckApplicationInstanceCertificate(false, 0).Wait();
+                applicationclient.CheckApplicationInstanceCertificate(false, 0).Wait();
                 //application.ApplicationConfiguration = getConfiguration();
 
                 // run the application interactively.
-                MainForm form = new MainForm(application.ApplicationConfiguration);
+                connectorForm form = new connectorForm(application, applicationclient);
                 Application.Run(form);
                 }
                 catch (Exception e)
