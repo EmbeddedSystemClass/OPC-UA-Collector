@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3B6C805E-2F2A-459B-97C8-5C8487E34129}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>OPCDemo</RootNamespace>
+    <RootNamespace>ServerCollector</RootNamespace>
     <AssemblyName>OPCUA_DFT_Server</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -14,6 +14,21 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,12 +53,18 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>OPCDemo.Program</StartupObject>
+    <StartupObject>ServerCollector.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>FB4_WIW_2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Opc.Ua.Client">
+      <HintPath>imports\Opc.Ua.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Opc.Ua.ClientControls">
+      <HintPath>imports\Opc.Ua.ClientControls.dll</HintPath>
+    </Reference>
     <Reference Include="Opc.Ua.Configuration">
       <HintPath>imports\Opc.Ua.Configuration.dll</HintPath>
     </Reference>
@@ -59,6 +80,7 @@
     <Reference Include="System">
       <HintPath>imports\System.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization">
       <HintPath>imports\System.Runtime.Serialization.dll</HintPath>
     </Reference>
@@ -96,6 +118,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="configs\CollectorObjects.cs" />
+    <Compile Include="mainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mainForm.Designer.cs">
+      <DependentUpon>mainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="NodeManagerCollector.cs" />
     <Compile Include="CollectorServer.cs" />
     <Compile Include="configs\Namespaces.cs" />
@@ -108,6 +136,123 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ApplicationMessageDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.AttributeListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.AttributesListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.BaseListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.BaseTreeCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.BrowseListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.BrowseNodeCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.BrowseTreeCtrl+NodesSelectedEventArgs.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.BrowseTreeCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.BrowseTreeViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CallRequestDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CallRequestListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateListDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateListFilter.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificatePropertiesListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateStoreCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateStoreDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateStoreTreeCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.CertificateStoreTreeDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ClientUtils.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ClipboardHack.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ComplexValueEditDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ConfiguredServerDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ConfiguredServerListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ConfiguredServerListDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ConnectEndpointEventArgs.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ConnectEndpointEventHandler.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ConnectServerCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.DataListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.DateTimeValueEditDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.DiscoveredServerListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.DiscoveredServerListDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.DiscoveredServerOnNetworkListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.DiscoveredServerOnNetworkListDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.DiscoverServerDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditAnnotationDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditArrayDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditComplexValue2Dlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditComplexValueDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditDataValueCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditDataValueDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditMonitoredItemDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditReadValueIdDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditSubscriptionDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditValue2Ctrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditValueCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EditWriteValueDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EndpointSelectorCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EventFilterListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EventListView.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.EventListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ExceptionDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.FilterDeclaration.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.FilterDeclarationField.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.GdsDiscoverServersDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.GuiUtils+Icons.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.GuiUtils.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HeaderBranding.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HistoryDataDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HistoryDataListView+HistoryReadType.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HistoryDataListView.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HistoryEventCtrl+HistoryOperation.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HistoryEventCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HostListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.HostListDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.InstanceDeclaration.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ISessionForm.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ListItemActionEventArgs.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ListItemActionEventHandler.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.NodeIdCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.NodeIdValueEditDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.NodeListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.NumericValueEditDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ReadRequestDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ReadRequestListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ReferenceListCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ReferenceTypeCtrl+ReferenceSelectedEventArgs.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ReferenceTypeCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectCertificateStoreCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectFileCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectHostCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectHostCtrlEventArgs.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectLocaleDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectNodeCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectNodeDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectNodesDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectProfileCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectProfileDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SelectUrlsCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SetFilterOperatorDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SetTypeDlg+SetTypeResult.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SetTypeDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SimpleValueEditDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.StringValueEditDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SubscribeDataDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SubscribeDataListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.SubscribeEventsDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.TreeNodeActionEventArgs.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.TreeNodeActionEventHandler.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.TypeDeclaration.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.TypeFieldsListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.UserNamePasswordDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.UsernameTokenDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ViewCertificateDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ViewEventDetailsDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.ViewNodeStateDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.WriteRequestDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.WriteRequestListViewCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Client.Controls.YesNoDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Server.Controls.ApplicationMessageDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Server.Controls.ExceptionDlg.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Server.Controls.HeaderBranding.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Server.Controls.ServerDiagnosticsCtrl.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Server.Controls.ServerForm.datasource" />
+    <None Include="Properties\DataSources\Opc.Ua.Server.Controls.ServerUtils.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="FB4_WIW_2.ico" />
@@ -116,7 +261,23 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6 %28x86 und x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="mainForm.resx">
+      <DependentUpon>mainForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
