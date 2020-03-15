@@ -31,7 +31,7 @@ namespace ServerCollector
 
             try
             {
-                CollectorServer demo = new CollectorServer();
+                CollectorServer server = new CollectorServer();
                 
 
                 
@@ -44,7 +44,7 @@ namespace ServerCollector
                 // check if running as a service.
                 if (!Environment.UserInteractive)
                 {
-                    application.StartAsService(demo);
+                    application.StartAsService(server);
                     return;
                 }
                 // load the application configuration.
@@ -56,7 +56,7 @@ namespace ServerCollector
                 application.CheckApplicationInstanceCertificate(false, 0).Wait();
 
                 // start the server.
-                application.Start(demo).Wait();
+                application.Start(server).Wait();
 
                 // run the application interactively.
                 //Application.Run(new Opc.Ua.Server.Controls.ServerForm(application));

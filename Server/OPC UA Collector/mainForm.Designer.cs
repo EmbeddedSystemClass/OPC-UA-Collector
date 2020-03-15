@@ -37,6 +37,7 @@
             this.BrowseCTRL = new Opc.Ua.Client.Controls.BrowseTreeCtrl();
             this.browseTreeCtrlBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.NodeInspector = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.serverDiagnosticsCtrlBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverFormBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverUtilsBindingSource)).BeginInit();
@@ -63,7 +64,7 @@
             this.ServerDiagnosticPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ServerDiagnosticPanel.Location = new System.Drawing.Point(0, 0);
             this.ServerDiagnosticPanel.Name = "ServerDiagnosticPanel";
-            this.ServerDiagnosticPanel.Size = new System.Drawing.Size(340, 502);
+            this.ServerDiagnosticPanel.Size = new System.Drawing.Size(931, 502);
             this.ServerDiagnosticPanel.TabIndex = 0;
             // 
             // ServerDiagnosticsCTRL
@@ -75,13 +76,15 @@
             // 
             // BrowseCTRL
             // 
+            this.BrowseCTRL.AttributesCTRL = null;
+            this.BrowseCTRL.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.BrowseCTRL.EnableDragging = false;
-            this.BrowseCTRL.Location = new System.Drawing.Point(0, 0);
+            this.BrowseCTRL.Location = new System.Drawing.Point(0, 131);
             this.BrowseCTRL.MinimumSize = new System.Drawing.Size(325, 216);
             this.BrowseCTRL.Name = "BrowseCTRL";
-            this.BrowseCTRL.Size = new System.Drawing.Size(325, 216);
+            this.BrowseCTRL.ReferencesCTRL = null;
+            this.BrowseCTRL.Size = new System.Drawing.Size(447, 371);
             this.BrowseCTRL.TabIndex = 0;
-            this.BrowseCTRL.Dock = System.Windows.Forms.DockStyle.Fill;
             // 
             // browseTreeCtrlBindingSource
             // 
@@ -89,12 +92,24 @@
             // 
             // NodeInspector
             // 
+            this.NodeInspector.Controls.Add(this.label1);
             this.NodeInspector.Controls.Add(this.BrowseCTRL);
             this.NodeInspector.Dock = System.Windows.Forms.DockStyle.Right;
             this.NodeInspector.Location = new System.Drawing.Point(484, 0);
             this.NodeInspector.Name = "NodeInspector";
             this.NodeInspector.Size = new System.Drawing.Size(447, 502);
             this.NodeInspector.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(447, 24);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Client Connector";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // mainForm
             // 
@@ -124,5 +139,6 @@
         private System.Windows.Forms.Panel ServerDiagnosticPanel;
         private System.Windows.Forms.BindingSource browseTreeCtrlBindingSource;
         private System.Windows.Forms.Panel NodeInspector;
+        private System.Windows.Forms.Label label1;
     }
 }

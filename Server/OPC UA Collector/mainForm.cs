@@ -28,5 +28,6 @@ namespace ServerCollector
         Opc.Ua.Server.StandardServer m_server;
         Opc.Ua.ApplicationConfiguration m_configuration;
         #endregion
+
     }
 }
