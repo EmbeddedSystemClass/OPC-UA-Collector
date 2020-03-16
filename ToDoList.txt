@@ -1,0 +1,6 @@
+- Methoden im NodeManager organisieren, sodass sie von außen auch nutzbar sind über die GUI
+- Struktur Server-Nodemanager organisieren, regeln
+- GUI,Methoden,allgemeine Struktur erweitern.
+- Connector Client in C# und Python anfangen zu entwickeln
+
+- Sicherhiet implementieren, sodass nicht jeder benutzer einfach Knoten hinzufügen kann

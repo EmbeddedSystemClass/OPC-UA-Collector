@@ -184,7 +184,6 @@ namespace ServerCollector
             }
         }
 
-        
         /// <summary>
         /// Verifies that the specified node exists.
         /// </summary>
@@ -304,22 +303,22 @@ namespace ServerCollector
                 switch (n)
                 {
                     case Collector.ObjectsIDs.ObjectControlleraddNamespace:
-                        m = addNamespace;
+                        m = method_addNamespace;
                         break;
                     case Collector.ObjectsIDs.ObjectControlleraddObjectNode:
-                        m = addObjectNode;
+                        m = method_addObjectNode;
                         break;
                     case Collector.ObjectsIDs.ObjectControllergetObjectRootNode:
-                        m = getObjectRootNode;
+                        m = method_getObjectRootNode;
                         break;
                     case Collector.ObjectsIDs.ObjectControllerauthenticate:
-                        m = authenticate;
+                        m = method_authenticate;
                         break;
                     case Collector.ObjectsIDs.ObjectControllerregisterServer:
-                        m = registerServer;
+                        m = method_registerServer;
                         break;
                     default:
-                        m = ControllerMethodStandard;
+                        m = method_ControllerMethodStandard;
                         break;
                 }
                 createMethod(Controller, addNamespaceMethod, (PropertyState)input, (PropertyState)output, m);
@@ -345,32 +344,36 @@ namespace ServerCollector
         }
         #endregion
         #region Controller Methods
+        public ushort addNamespace(string url)
+        {
+            return SystemContext.NamespaceUris.GetIndexOrAppend(url);
+        }
+        #endregion
+        #region NodeManager methods
         //Fügt einen vom Client übergebene Namespace zum Server hinzu
-        public ServiceResult ControllerMethodStandard(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        public ServiceResult method_ControllerMethodStandard(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
             //System.Windows.Forms.MessageBox.Show("test");
 
             return StatusCodes.BadNotImplemented;
         }
-        public ServiceResult addNamespace(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        public ServiceResult method_addNamespace(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
             Debug.WriteLine("called: " + method.DisplayName.Text + " ; addNamespace");
             if (inputsArguments[0].ToString() == null || inputsArguments[0].ToString() == "")
                 return StatusCodes.BadArgumentsMissing;
-            ushort index = SystemContext.NamespaceUris.GetIndexOrAppend(inputsArguments[0].ToString());
-            context.SessionId.ToString();
-            outputArguments[0] = index.ToString();
+            List<string> urls = new List<string>();
+            outputArguments[0] = addNamespace(inputsArguments[0].ToString()) ;
             return StatusCodes.Good;
-            //context.SessionId;
         }
 
-        public ServiceResult addObjectNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        public ServiceResult method_addObjectNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
 
             Debug.WriteLine("called: " + method.DisplayName.Text + " ; addObjectNode");
             return StatusCodes.BadNotImplemented;
         }
-        public ServiceResult authenticate(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        public ServiceResult method_authenticate(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
             ClientOPC cl;
             string token = inputsArguments[0].ToString();
@@ -381,7 +384,7 @@ namespace ServerCollector
             cl.authenticate(token, context.SessionId);
             return StatusCodes.Good;
         }
-        public ServiceResult getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        public ServiceResult method_getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
             ClientOPC client = Clients.clients[0];
             //try to get client
@@ -404,7 +407,7 @@ namespace ServerCollector
             Debug.WriteLine("called: " + method.DisplayName.Text + " ; getObjectRootNode");
             return StatusCodes.BadNotImplemented;
         }
-public ServiceResult registerServer(ISystemContext contex, MethodState method, IList<object> inputArguments, IList<object> outputarguments)
+        public ServiceResult method_registerServer(ISystemContext contex, MethodState method, IList<object> inputArguments, IList<object> outputarguments)
         {
             IEnumerator<object> inputs = inputArguments.GetEnumerator();
             inputs.MoveNext();

@@ -40,6 +40,8 @@
             this.NodeInspector = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.PopupMenu = new System.Windows.Forms.ContextMenuStrip();
+            this.addToCollector = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.serverDiagnosticsCtrlBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverFormBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverUtilsBindingSource)).BeginInit();
@@ -76,11 +78,28 @@
             this.ServerDiagnosticsCTRL.Name = "ServerDiagnosticsCTRL";
             this.ServerDiagnosticsCTRL.Size = new System.Drawing.Size(340, 400);
             this.ServerDiagnosticsCTRL.TabIndex = 0;
+            //
+            // PopupMenuItems
+            //
+            this.addToCollector.Checked = true;
+            this.addToCollector.CheckOnClick = true;
+            this.addToCollector.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.addToCollector.Name = "CollectorAdd";
+            this.addToCollector.Size = new System.Drawing.Size(161, 22);
+            this.addToCollector.Text = "Add to Collector";
+            this.addToCollector.CheckedChanged += new System.EventHandler(addToCollector_CheckedChanged);
+            //
+            // PopupMenu
+            //
+            this.PopupMenu.Name = "PopupMenu";
+            this.PopupMenu.Size = new System.Drawing.Size(162,330);
+            this.PopupMenu.Items.Add(this.addToCollector);
             // 
             // BrowseCTRL
             // 
             this.BrowseCTRL.AttributesListCollapsed = false;
             this.BrowseCTRL.AutoSize = true;
+            this.BrowseCTRL.Cursor = System.Windows.Forms.Cursors.Default;
             this.BrowseCTRL.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BrowseCTRL.Location = new System.Drawing.Point(0, 0);
             this.BrowseCTRL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -90,6 +109,7 @@
             this.BrowseCTRL.SplitterDistance = 387;
             this.BrowseCTRL.TabIndex = 6;
             this.BrowseCTRL.View = null;
+            this.BrowseCTRL.BrowseCTRL.BrowseTV.ContextMenuStrip = this.PopupMenu;
             // 
             // connectServerCtrl1
             // 
@@ -110,8 +130,8 @@
             this.connectServerCtrl1.TabIndex = 14;
             this.connectServerCtrl1.UserIdentity = null;
             this.connectServerCtrl1.UseSecurity = true;
-            this.connectServerCtrl1.ReconnectComplete += new System.EventHandler(this.Server_ConnectComplete);
-            this.connectServerCtrl1.ConnectComplete += new System.EventHandler(this.Server_ConnectComplete);
+            this.connectServerCtrl1.ReconnectComplete += new System.EventHandler(this.Client_ReconnectComplete);
+            this.connectServerCtrl1.ConnectComplete += new System.EventHandler(this.Client_ConnectComplete);
             // 
             // browseTreeCtrlBindingSource
             // 
@@ -173,6 +193,8 @@
         private Opc.Ua.Client.Controls.ConnectServerCtrl connectServerCtrl1;
         private Opc.Ua.Client.Controls.BrowseNodeCtrl BrowseCTRL;
         private Opc.Ua.Server.Controls.ServerDiagnosticsCtrl ServerDiagnosticsCTRL;
+        private System.Windows.Forms.ContextMenuStrip PopupMenu;
+        private System.Windows.Forms.ToolStripMenuItem addToCollector;
         private System.Windows.Forms.BindingSource serverDiagnosticsCtrlBindingSource;
         private System.Windows.Forms.BindingSource serverFormBindingSource;
         private System.Windows.Forms.BindingSource serverUtilsBindingSource;
