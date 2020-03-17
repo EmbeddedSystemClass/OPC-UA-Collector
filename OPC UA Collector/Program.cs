@@ -26,8 +26,7 @@ namespace ServerCollector
             ApplicationInstance application = new ApplicationInstance(getConfiguration());
             application.ApplicationType = ApplicationType.Server;
             application.ConfigSectionName = "CollectorServer";
-
-
+            application.ApplicationConfiguration.ServerConfiguration.base
             ApplicationInstance applicationclient = new ApplicationInstance();
             applicationclient.ApplicationType = ApplicationType.Client;
             applicationclient.ConfigSectionName = "Client";

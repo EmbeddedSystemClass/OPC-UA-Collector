@@ -348,6 +348,15 @@ namespace ServerCollector
         {
             return SystemContext.NamespaceUris.GetIndexOrAppend(url);
         }
+        public List<ushort> addNamespaces(string[] urls)
+        {
+            List<ushort> indices = new List<ushort>();
+            foreach(string url in urls)
+            {
+                indices.Add(addNamespace(url));
+            }
+            return indices;
+        }
         #endregion
         #region NodeManager methods
         //Fügt einen vom Client übergebene Namespace zum Server hinzu
