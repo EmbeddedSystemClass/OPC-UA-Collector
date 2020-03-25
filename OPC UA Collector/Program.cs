@@ -31,8 +31,6 @@ namespace ServerCollector
             {
                 CollectorServer server = new CollectorServer();
                 
-
-                
                 // process and command line arguments.
                 if (application.ProcessCommandLine())
                 {
@@ -66,8 +64,14 @@ namespace ServerCollector
                 return;
             }
         }
+        /// <summary>
+        /// hardcoded application configuration of the collector server/client
+        /// </summary>
+        /// <returns>application configuration of the collector server/client</returns>
         public static ApplicationConfiguration getConfiguration()
         {
+            //not fully implemented
+
             ApplicationConfiguration config = new ApplicationConfiguration();
             config.ApplicationName = "Collector Server";
             //config.ApplicationType = null;

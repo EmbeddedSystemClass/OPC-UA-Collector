@@ -84,7 +84,6 @@ namespace ServerCollector
         }
         #endregion
 
-
         #region INodeManager Members
         /// <summary>
         /// Does any initialization required before the address space can be used.
@@ -229,8 +228,102 @@ namespace ServerCollector
             AddPredefinedNode(SystemContext, node);
         }
         #endregion
-        #region Collector helpers
+        
+        #region Controller Methods
+        public ushort addNamespace(string url)
+        {
+            return SystemContext.NamespaceUris.GetIndexOrAppend(url);
+        }
+        public List<ushort> addNamespaces(string[] urls)
+        {
+            List<ushort> indices = new List<ushort>();
+            foreach(string url in urls)
+            {
+                indices.Add(addNamespace(url));
+            }
+            return indices;
+        }
+        #endregion
 
+        // methods called by external clients via opc ua
+        #region Collector opc ua methods
+        public ServiceResult method_ControllerMethodStandard(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            //System.Windows.Forms.MessageBox.Show("test");
+
+            return StatusCodes.BadNotImplemented;
+        }
+        public ServiceResult method_addNamespace(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addNamespace");
+            if (inputsArguments[0].ToString() == null || inputsArguments[0].ToString() == "")
+                return StatusCodes.BadArgumentsMissing;
+            List<string> urls = new List<string>();
+            outputArguments[0] = addNamespace(inputsArguments[0].ToString()) ;
+            return StatusCodes.Good;
+        }
+
+        public ServiceResult method_addObjectNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+
+            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addObjectNode");
+            return StatusCodes.BadNotImplemented;
+        }
+        public ServiceResult method_authenticate(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            ClientOPC cl;
+            string token = inputsArguments[0].ToString();
+            if (!ServerCollector.Clients.token_Client.TryGetValue(token, out cl))
+            {
+                return StatusCodes.BadAggregateInvalidInputs;
+            }
+            cl.authenticate(token, context.SessionId);
+            return StatusCodes.Good;
+        }
+        public ServiceResult method_getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
+        {
+            ClientOPC client = Clients.clients[0];
+            //try to get client
+            if (!Clients.session_client.TryGetValue(context.SessionId, out client))
+            {
+                //No Client for this session id
+                return StatusCodes.BadSessionIdInvalid;
+            }
+            //test if client root node is alread set
+            if (!client.isRootset||true)
+            {
+                addCollectorRootObject(client,"test");
+            }
+            //NodeState nodest = client.RootObject;
+            //FileStream fs = new FileStream(context.SessionId.ToString() + ".xml",FileMode.Create);
+            //XmlEncoder xml = new XmlEncoder(ServiceMessageContext.GlobalContext);
+            //nodest.SaveAsXml(context,xml);
+            //Debug.WriteLine(xml.ToString());
+
+            Debug.WriteLine("called: " + method.DisplayName.Text + " ; getObjectRootNode");
+            return StatusCodes.BadNotImplemented;
+        }
+        public ServiceResult method_registerServer(ISystemContext contex, MethodState method, IList<object> inputArguments, IList<object> outputarguments)
+        {
+            IEnumerator<object> inputs = inputArguments.GetEnumerator();
+            inputs.MoveNext();
+            string token=ClientToken.getClientToken(inputs.Current.ToString());
+            ClientOPC client;
+            if(Clients.token_Client.TryGetValue(token,out client))
+            {
+                outputarguments[0] = token;
+                return StatusCodes.Good;
+            }
+            client = new ClientOPC(inputArguments[0], contex.SessionId);
+            Clients.addClient(client);
+            outputarguments[0] = client.token;
+            addCollectorRootObject(client,inputs.MoveNext()?inputs.Current.ToString():contex.SessionId.ToString());
+            return StatusCodes.Good;
+        }
+        #endregion
+
+        // small helpers for the main collector methods
+        #region Collector helpers
         private void createMethod(NodeState parent, MethodState method, PropertyState inputs, PropertyState output, GenericMethodCalledEventHandler methodToBeCalled)
         {
 
@@ -351,7 +444,7 @@ namespace ServerCollector
         {
             throw new NotImplementedException();
         }
-        private void addCollectorRootObject(ClientOPC client,string name)
+        private void addCollectorRootObject(ClientOPC client, string name)
         {
             BaseObjectState objRoot = new BaseObjectState(machines);
             objRoot.TypeDefinitionId = ControllerObject.NodeId;
@@ -362,102 +455,13 @@ namespace ServerCollector
 
         }
         #endregion
-        #region Controller Methods
-        public ushort addNamespace(string url)
-        {
-            return SystemContext.NamespaceUris.GetIndexOrAppend(url);
-        }
-        public List<ushort> addNamespaces(string[] urls)
-        {
-            List<ushort> indices = new List<ushort>();
-            foreach(string url in urls)
-            {
-                indices.Add(addNamespace(url));
-            }
-            return indices;
-        }
-        #endregion
-        
-        #region Collector methods
-        //Fügt einen vom Client übergebene Namespace zum Server hinzu
-        public ServiceResult method_ControllerMethodStandard(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-            //System.Windows.Forms.MessageBox.Show("test");
 
-            return StatusCodes.BadNotImplemented;
-        }
-        public ServiceResult method_addNamespace(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addNamespace");
-            if (inputsArguments[0].ToString() == null || inputsArguments[0].ToString() == "")
-                return StatusCodes.BadArgumentsMissing;
-            List<string> urls = new List<string>();
-            outputArguments[0] = addNamespace(inputsArguments[0].ToString()) ;
-            return StatusCodes.Good;
-        }
-
-        public ServiceResult method_addObjectNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-
-            Debug.WriteLine("called: " + method.DisplayName.Text + " ; addObjectNode");
-            return StatusCodes.BadNotImplemented;
-        }
-        public ServiceResult method_authenticate(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-            ClientOPC cl;
-            string token = inputsArguments[0].ToString();
-            if (!ServerCollector.Clients.token_Client.TryGetValue(token, out cl))
-            {
-                return StatusCodes.BadAggregateInvalidInputs;
-            }
-            cl.authenticate(token, context.SessionId);
-            return StatusCodes.Good;
-        }
-        public ServiceResult method_getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
-        {
-            ClientOPC client = Clients.clients[0];
-            //try to get client
-            if (!Clients.session_client.TryGetValue(context.SessionId, out client))
-            {
-                //No Client for this session id
-                return StatusCodes.BadSessionIdInvalid;
-            }
-            //test if client root node is alread set
-            if (!client.isRootset||true)
-            {
-                addCollectorRootObject(client,"test");
-            }
-            //NodeState nodest = client.RootObject;
-            //FileStream fs = new FileStream(context.SessionId.ToString() + ".xml",FileMode.Create);
-            //XmlEncoder xml = new XmlEncoder(ServiceMessageContext.GlobalContext);
-            //nodest.SaveAsXml(context,xml);
-            //Debug.WriteLine(xml.ToString());
-
-            Debug.WriteLine("called: " + method.DisplayName.Text + " ; getObjectRootNode");
-            return StatusCodes.BadNotImplemented;
-        }
-        public ServiceResult method_registerServer(ISystemContext contex, MethodState method, IList<object> inputArguments, IList<object> outputarguments)
-        {
-            IEnumerator<object> inputs = inputArguments.GetEnumerator();
-            inputs.MoveNext();
-            string token=ClientToken.getClientToken(inputs.Current.ToString());
-            ClientOPC client;
-            if(Clients.token_Client.TryGetValue(token,out client))
-            {
-                outputarguments[0] = token;
-                return StatusCodes.Good;
-            }
-            client = new ClientOPC(inputArguments[0], contex.SessionId);
-            Clients.addClient(client);
-            outputarguments[0] = client.token;
-            addCollectorRootObject(client,inputs.MoveNext()?inputs.Current.ToString():contex.SessionId.ToString());
-            return StatusCodes.Good;
-        }
-        #endregion
-        
         #region Fields
+        // Object root node (Folder)
         public BaseObjectState ObjectRoot { private set; get; }
+        // machine node, where all machine data of other opc's are stored
         public BaseObjectState machines { private set; get; }
+        // Controller Object (old structure)
         public BaseObjectTypeState ControllerObject;
         IReference[] externalRef;
         #endregion

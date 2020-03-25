@@ -64,23 +64,41 @@ namespace ServerCollector
         
         #endregion
         #region Controller Methods
+        // methods of the Collector Server, special actions
+        /// <summary>
+        /// add a url to Namespaces and return the id
+        /// </summary>
+        /// <param name="url">url to add to Namespaces of the Server</param>
+        /// <returns>Namespaceindex</returns>
         public ushort addNamespace(string url)
         {
             return collectorNodeManager.addNamespace(url);
         }
+        /// <summary>
+        /// add multiple url's to Namespaces of the server
+        /// </summary>
+        /// <param name="urls">url's to add to Naespace</param>
+        /// <returns>List of Namespaceindexes of the added url's</returns>
         public ushort[] addNamespaces(string[] urls)
         {
             return collectorNodeManager.addNamespaces(urls).ToArray();
         }
+        /// <summary>
+        /// sipmply return the systemcontext of the server
+        /// </summary>
+        /// <returns>systemcontext of the server</returns>
         public SystemContext GetSystemContext()
         {
             return collectorNodeManager.SystemContext;
         }
+        /// <summary>
+        /// simply return the machine node of the server
+        /// </summary>
+        /// <returns>machine node of server</returns>
         public BaseObjectState getMachineNode()
         {
             return collectorNodeManager.machines;
         }
-        public uint addClient()
         #endregion
         #region private fields
         public NodeManagerCollector collectorNodeManager { private set; get; }

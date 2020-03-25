@@ -23,10 +23,19 @@ namespace ServerCollector.Forms
             this.serverBrowseNodeCTRL1.InitializeView(this.context,new BaseInstanceState[] { this.rootNode });
         }
         #region methods
+        /// <summary>
+        /// called by pressing the selection button, invoke the action onSelected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void selected_click(object sender , EventArgs e)
         {
             callOnSelected(this.serverBrowseNodeCTRL1.getSelectedNode());
         }
+        /// <summary>
+        /// call onSelected methods
+        /// </summary>
+        /// <param name="node">BaseInstanceState of the node where action will be performed on</param>
         private void callOnSelected(BaseInstanceState node)
         {
             onSelected(node);
