@@ -27,7 +27,7 @@ namespace ServerCollector
             protected override MasterNodeManager CreateMasterNodeManager(IServerInternal server, ApplicationConfiguration configuration)
             {
                 Utils.Trace("Creating the Node Managers.");
-
+            
                 List<INodeManager> nodeManagers = new List<INodeManager>();
 
                 collectorNodeManager = new NodeManagerCollector(server, configuration);
@@ -44,7 +44,7 @@ namespace ServerCollector
         /// These properties are exposed by the server but cannot be changed by administrators.
         /// </remarks>
         protected override ServerProperties LoadServerProperties()
-        {
+        { 
             ServerProperties properties = new ServerProperties();
 
             properties.ManufacturerName = "Dermo Manufacturer";
@@ -71,6 +71,14 @@ namespace ServerCollector
         public ushort[] addNamespaces(string[] urls)
         {
             return collectorNodeManager.addNamespaces(urls).ToArray();
+        }
+        public SystemContext GetSystemContext()
+        {
+            return collectorNodeManager.SystemContext;
+        }
+        public BaseObjectState getMachineNode()
+        {
+            return collectorNodeManager.machines;
         }
         #endregion
         #region private fields

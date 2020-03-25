@@ -121,11 +121,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="configs\CollectorObjects.cs" />
+    <Compile Include="Forms\Elements\tabControl_Server.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\InputDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\InputDialog.Designer.cs">
       <DependentUpon>InputDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NodeSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NodeSelector.Designer.cs">
+      <DependentUpon>NodeSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ServerBrowseNodeCTRL.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ServerBrowseNodeCTRL.Designer.cs">
+      <DependentUpon>ServerBrowseNodeCTRL.cs</DependentUpon>
     </Compile>
     <Compile Include="mainForm.cs">
       <SubType>Form</SubType>
@@ -285,6 +300,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\InputDialog.resx">
       <DependentUpon>InputDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NodeSelector.resx">
+      <DependentUpon>NodeSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ServerBrowseNodeCTRL.resx">
+      <DependentUpon>ServerBrowseNodeCTRL.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.cs</DependentUpon>

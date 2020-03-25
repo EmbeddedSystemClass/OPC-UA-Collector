@@ -23,14 +23,9 @@ namespace ServerCollector
             Application.SetCompatibleTextRenderingDefault(false);
 
             //ApplicationInstance.MessageDlg = new ApplicationMessageDlg();
-            ApplicationInstance application = new ApplicationInstance(getConfiguration());
+            ApplicationInstance application = new ApplicationInstance();
             application.ApplicationType = ApplicationType.Server;
             application.ConfigSectionName = "CollectorServer";
-            application.ApplicationConfiguration.ServerConfiguration.base
-            ApplicationInstance applicationclient = new ApplicationInstance();
-            applicationclient.ApplicationType = ApplicationType.Client;
-            applicationclient.ConfigSectionName = "Client";
-
 
             try
             {
@@ -52,18 +47,15 @@ namespace ServerCollector
                 }
                 // load the application configuration.
                 application.LoadApplicationConfiguration(false).Wait();
-                //application.ApplicationConfiguration = getConfiguration();
-                applicationclient.LoadApplicationConfiguration(false).Wait();
 
                 // check the application certificate.
                 application.CheckApplicationInstanceCertificate(false, 0).Wait();
-                applicationclient.CheckApplicationInstanceCertificate(false, 0).Wait();
                 // start the server.
                 application.Start(server).Wait();
 
                 // run the application interactively.
                 //Application.Run(new Opc.Ua.Server.Controls.ServerForm(application));
-                Application.Run(new mainForm(application,applicationclient));
+                Application.Run(new mainForm(application));
                 //Console.ReadLine();
                 
             }

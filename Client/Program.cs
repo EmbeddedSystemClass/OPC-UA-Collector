@@ -46,7 +46,7 @@
                 //application.ApplicationConfiguration = getConfiguration();
 
                 // run the application interactively.
-                connectorForm form = new connectorForm(application, applicationclient);
+                connectorForm form = new connectorForm(applicationclient);
                 Application.Run(form);
                 }
                 catch (Exception e)

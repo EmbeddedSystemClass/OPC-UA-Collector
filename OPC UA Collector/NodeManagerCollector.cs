@@ -435,7 +435,7 @@ namespace ServerCollector
         }
         #endregion
         #region Private Fields
-        BaseObjectState machines;
+        public BaseObjectState machines { private set; get; }
         BaseObjectTypeState ControllerObject;
         IReference[] externalRef;
         #endregion

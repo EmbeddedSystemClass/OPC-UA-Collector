@@ -10,7 +10,7 @@ namespace ServerCollector
 {
     public partial class mainForm : Form
     {
-        public mainForm(ApplicationInstance application, ApplicationInstance client=null)
+        public mainForm(ApplicationInstance application)
         {
             InitializeComponent();
 
@@ -18,7 +18,8 @@ namespace ServerCollector
             m_server = application.Server as CollectorServer;
             m_configuration = application.ApplicationConfiguration;
             this.ServerDiagnosticsCTRL.Initialize(m_server,m_configuration);
-            this.connectServerCtrl1.Configuration = client.ApplicationConfiguration;
+            this.connectServerCtrl1.Configuration = application.ApplicationConfiguration;
+            this.serverBrowseNodeCTRL1.InitializeView(m_server.GetSystemContext(), m_server.getMachineNode());
         }
         
         #region GUI methods
@@ -56,32 +57,6 @@ namespace ServerCollector
         CollectorServer m_server;
         Opc.Ua.ApplicationConfiguration m_configuration;
         #endregion
-        private async void connectToCollector_()
-        {
-            EndpointDescription endpointDescription = CoreClientUtils.SelectEndpoint(m_configuration.ServerConfiguration.BaseAddresses[0], false, 1000);
-
-            EndpointConfiguration endpointConfiguration = EndpointConfiguration.Create(m_configuration);
-            ConfiguredEndpoint endpoint = new ConfiguredEndpoint(null, endpointDescription, endpointConfiguration);
-            m_server.sess
-            m_server session = await Session.Create(
-                m_configuration,
-                endpoint,
-                false,
-                !DisableDomainCheck,
-                (String.IsNullOrEmpty(SessionName)) ? m_configuration.ApplicationName : SessionName,
-                60000,
-                UserIdentity,
-                PreferredLocales);
-
-            // set up keep alive callback.
-            m_session.KeepAlive += new KeepAliveEventHandler(Session_KeepAlive);
-
-            // raise an event.
-            DoConnectComplete(null);
-
-            // return the new session.
-            return m_session;
-        }
         private void buttonNamespace_Click(object sender, EventArgs e)
         {
             ServerCollector.Forms.InputDialog input = new Forms.InputDialog("test");
@@ -92,6 +67,27 @@ namespace ServerCollector
         private void buttonNamespaces_Click(object sender, EventArgs e)
         {
             m_server.addNamespaces(this.connectServerCtrl1.Session.NamespaceUris.ToArray());
+        }
+
+        private void addToCollectorModel_Click(object sender, EventArgs e)
+        {
+            ServerCollector.Forms.NodeSelector nodeSelector = new Forms.NodeSelector(addSelectedNodeAsChild);
+            nodeSelector.Show();
+        }
+        private void addSelectedNodeAsChild(BaseObjectState parentNode)
+        {
+            ReferenceDescription selectedNode = this.BrowseCTRL.SelectedNode;
+            BaseObjectState child = new BaseObjectState(parentNode);
+            child.NodeId = new NodeId(6987);
+            child.BrowseName = new QualifiedName("test");
+            child.DisplayName = child.BrowseName.Name;
+            child.
+            parentNode.AddChild(child);
+        }
+
+        private void connectToCollector(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
