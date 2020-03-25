@@ -47,7 +47,7 @@
             this.BrowseServerPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.BrowseServerPanel.Location = new System.Drawing.Point(0, 0);
             this.BrowseServerPanel.Name = "BrowseServerPanel";
-            this.BrowseServerPanel.Size = new System.Drawing.Size(800, 335);
+            this.BrowseServerPanel.Size = new System.Drawing.Size(800, 384);
             this.BrowseServerPanel.TabIndex = 0;
             // 
             // splitContainer1
@@ -59,7 +59,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.serverBrowseNodeCTRL1);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 335);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 384);
             this.splitContainer1.SplitterDistance = 485;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -68,7 +68,7 @@
             this.serverBrowseNodeCTRL1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.serverBrowseNodeCTRL1.Location = new System.Drawing.Point(0, 0);
             this.serverBrowseNodeCTRL1.Name = "serverBrowseNodeCTRL1";
-            this.serverBrowseNodeCTRL1.Size = new System.Drawing.Size(485, 335);
+            this.serverBrowseNodeCTRL1.Size = new System.Drawing.Size(485, 384);
             this.serverBrowseNodeCTRL1.TabIndex = 0;
             // 
             // statusStrip1
@@ -87,6 +87,7 @@
             this.selected.TabIndex = 3;
             this.selected.Text = "select Node";
             this.selected.UseVisualStyleBackColor = true;
+            this.selected.Click += new System.EventHandler(this.selected_click);
             // 
             // panel2
             // 

@@ -15,7 +15,7 @@ namespace ServerCollector
     public class CollectorServer : StandardServer
      {
         
-            #region Overridden Methods
+        #region Overridden Methods
             /// <summary>
             /// Creates the node managers for the server.
             /// </summary>
@@ -80,9 +80,10 @@ namespace ServerCollector
         {
             return collectorNodeManager.machines;
         }
+        public uint addClient()
         #endregion
         #region private fields
-        private NodeManagerCollector collectorNodeManager;
+        public NodeManagerCollector collectorNodeManager { private set; get; }
         #endregion
     }
 }

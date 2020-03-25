@@ -210,8 +210,27 @@ namespace ServerCollector
         }
 
         #endregion
+
+        #region NodeManager
+        // methods for Handling Nodes
+        /// <summary>
+        /// add a Node as a child node of a parent to node structure
+        /// </summary>
+        /// <param name="node">node to add</param>
+        /// <param name="Parent">parent node of the node</param>
+        public void addNode(BaseInstanceState node, BaseInstanceState Parent)
+        {
+            addNode(node, Parent.NodeId);
+        } 
+        public void addNode(BaseInstanceState node , NodeId parentId)
+        {
+            NodeState parent = Find(parentId);
+            parent.AddChild(node);
+            AddPredefinedNode(SystemContext, node);
+        }
+        #endregion
         #region Collector helpers
-        
+
         private void createMethod(NodeState parent, MethodState method, PropertyState inputs, PropertyState output, GenericMethodCalledEventHandler methodToBeCalled)
         {
 
@@ -358,7 +377,8 @@ namespace ServerCollector
             return indices;
         }
         #endregion
-        #region NodeManager methods
+        
+        #region Collector methods
         //Fügt einen vom Client übergebene Namespace zum Server hinzu
         public ServiceResult method_ControllerMethodStandard(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
@@ -434,9 +454,11 @@ namespace ServerCollector
             return StatusCodes.Good;
         }
         #endregion
-        #region Private Fields
+        
+        #region Fields
+        public BaseObjectState ObjectRoot { private set; get; }
         public BaseObjectState machines { private set; get; }
-        BaseObjectTypeState ControllerObject;
+        public BaseObjectTypeState ControllerObject;
         IReference[] externalRef;
         #endregion
     }

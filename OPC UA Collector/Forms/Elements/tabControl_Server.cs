@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Opc.Ua.Client;
 namespace ServerCollector.Forms.Elements
 {
-    class tabControl_Server:System.Windows.Forms.TabPage
+    class tabControl_Server : System.Windows.Forms.TabPage
     {
-        public tabControl_Server(Session session):base()
+        public tabControl_Server(Session session) : base()
         {
             this.session = session;
             InitializeComponents();

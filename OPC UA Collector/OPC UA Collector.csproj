@@ -121,9 +121,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="configs\CollectorObjects.cs" />
-    <Compile Include="Forms\Elements\tabControl_Server.cs">
+    <Compile Include="Forms\Elements\TabControl_Server.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\Elements\TreeViewNode.cs" />
     <Compile Include="Forms\InputDialog.cs">
       <SubType>Form</SubType>
     </Compile>

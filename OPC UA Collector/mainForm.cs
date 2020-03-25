@@ -19,7 +19,10 @@ namespace ServerCollector
             m_configuration = application.ApplicationConfiguration;
             this.ServerDiagnosticsCTRL.Initialize(m_server,m_configuration);
             this.connectServerCtrl1.Configuration = application.ApplicationConfiguration;
-            this.serverBrowseNodeCTRL1.InitializeView(m_server.GetSystemContext(), m_server.getMachineNode());
+            List<BaseInstanceState> BrowseNodeCTRLRoots = new List<BaseInstanceState>();
+            BrowseNodeCTRLRoots.Add(m_server.collectorNodeManager.machines);
+            //BrowseNodeCTRLRoots.Add(m_server.collectorNodeManager.ObjectRoot);
+            this.serverBrowseNodeCTRL1.InitializeView(m_server.GetSystemContext(), BrowseNodeCTRLRoots);
         }
         
         #region GUI methods
@@ -71,23 +74,38 @@ namespace ServerCollector
 
         private void addToCollectorModel_Click(object sender, EventArgs e)
         {
-            ServerCollector.Forms.NodeSelector nodeSelector = new Forms.NodeSelector(addSelectedNodeAsChild);
+            ServerCollector.Forms.NodeSelector nodeSelector = new Forms.NodeSelector(addSelectedNodeAsChild,this.m_server.GetSystemContext(),this.m_server.getMachineNode());
             nodeSelector.Show();
         }
-        private void addSelectedNodeAsChild(BaseObjectState parentNode)
+        private void addSelectedNodeAsChild(BaseInstanceState parentNode)
         {
+
             ReferenceDescription selectedNode = this.BrowseCTRL.SelectedNode;
+            this.BrowseCTRL.SelectedNode.NodeId;
+
             BaseObjectState child = new BaseObjectState(parentNode);
             child.NodeId = new NodeId(6987);
             child.BrowseName = new QualifiedName("test");
             child.DisplayName = child.BrowseName.Name;
-            child.
-            parentNode.AddChild(child);
+            //parentNode.AddChild(child);
+            this.m_server.collectorNodeManager.addNode(child, parentNode);
         }
 
-        private void connectToCollector(object sender, PaintEventArgs e)
+        private void updateView(object sender, PaintEventArgs e)
         {
+            this.serverBrowseNodeCTRL1.updateView();
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // try to find opened Tab with same Adress
+
+            // not opened - add new tab with Adress from ServerConnectorEndpoint
+
+
+            //TabPage tabPage = new TabPage();
+            //tabPage.Text = 
+            //this.tabControl_Server.Controls.Add()
         }
     }
 }

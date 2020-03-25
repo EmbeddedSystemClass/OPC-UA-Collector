@@ -8,7 +8,21 @@ using Opc.Ua.Server;
 using Opc.Ua;
 using System.Security.Cryptography;
 
-namespace ServerCollector
+namespace ServerCollector.Client
+{
+    public class Clients
+    {
+
+    }
+    public class Client
+    {
+        #region Members
+        Opc.Ua.Client.Session session;
+        object identifier;
+        #endregion
+    }
+}
+namespace ServerCollector.old
 {
     static class Clients
     {
@@ -81,7 +95,6 @@ namespace ServerCollector
                 
             }
         }
-        
         
         public ClientOPC(object identifier,NodeId session)
         {
