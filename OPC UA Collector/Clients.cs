@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Opc.Ua.Server;
+using Opc.Ua.Client;
 using Opc.Ua;
 using System.Security.Cryptography;
 
@@ -17,9 +17,19 @@ namespace ServerCollector.Client
     public class Client
     {
         #region Members
-        Opc.Ua.Client.Session session;
+        string name;
         object identifier;
+        NodeId rootNode;
+        Session session;
+        List<Subscription> m_subscribtion;
         #endregion
+
+        public Client(string Name, object Identifier, Session session)
+        {
+            this.name = Name;
+            this.identifier = Identifier;
+            this.session = Session.Recreate(session);
+        }
     }
 }
 namespace ServerCollector.old

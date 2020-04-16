@@ -20,7 +20,7 @@ namespace ServerCollector
             this.ServerDiagnosticsCTRL.Initialize(m_server,m_configuration);
             this.connectServerCtrl1.Configuration = application.ApplicationConfiguration;
             List<BaseInstanceState> BrowseNodeCTRLRoots = new List<BaseInstanceState>();
-            BrowseNodeCTRLRoots.Add(m_server.collectorNodeManager.machines);
+            BrowseNodeCTRLRoots.Add(m_server.machineNode);
             //BrowseNodeCTRLRoots.Add(m_server.collectorNodeManager.ObjectRoot);
             this.serverBrowseNodeCTRL1.InitializeView(m_server.GetSystemContext(), BrowseNodeCTRLRoots);
         }
@@ -62,8 +62,9 @@ namespace ServerCollector
         #endregion
         private void buttonNamespace_Click(object sender, EventArgs e)
         {
-            ServerCollector.Forms.InputDialog input = new Forms.InputDialog("test");
+            ServerCollector.Forms.InputDialog input = new Forms.InputDialog("Namespace to add:");
             input.ShowDialog() ;
+            
             m_server.addNamespace(input.getInputText());
         }
 
@@ -81,14 +82,15 @@ namespace ServerCollector
         {
 
             ReferenceDescription selectedNode = this.BrowseCTRL.SelectedNode;
-            this.BrowseCTRL.SelectedNode.NodeId;
 
             BaseObjectState child = new BaseObjectState(parentNode);
-            child.NodeId = new NodeId(6987);
-            child.BrowseName = new QualifiedName("test");
+            uint nodeid_ident;
+            if (UInt32.TryParse(selectedNode.NodeId.Identifier.ToString(), out nodeid_ident)) child.NodeId = new NodeId(nodeid_ident);
+            else child.NodeId = new NodeId(selectedNode.NodeId.Identifier.ToString());
+            child.BrowseName = selectedNode.BrowseName;
             child.DisplayName = child.BrowseName.Name;
             //parentNode.AddChild(child);
-            this.m_server.collectorNodeManager.addNode(child, parentNode);
+            this.m_server.addNode(child, parentNode.NodeId);
         }
 
         private void updateView(object sender, PaintEventArgs e)
@@ -106,6 +108,21 @@ namespace ServerCollector
             //TabPage tabPage = new TabPage();
             //tabPage.Text = 
             //this.tabControl_Server.Controls.Add()
+        }
+
+        private void regServerButton_Click(object sender, EventArgs e)
+        {
+            ServerCollector.Forms.InputDialog input = new Forms.InputDialog("Name of the Server with URL ("+connectServerCtrl1.ServerUrl+"):");
+            
+            input.ShowDialog();
+
+            try
+            {
+                m_server.registerServer(input.getInputText(), connectServerCtrl1.ServerUrl, connectServerCtrl1.Session);
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -44,7 +44,8 @@ namespace ServerCollector
                     return;
                 }
                 // load the application configuration.
-                application.LoadApplicationConfiguration(false).Wait();
+                //application.LoadApplicationConfiguration(false).Wait();
+                application.LoadApplicationConfiguration(@"..\..\References\CollectorServer.Config.xml", false).Wait();
 
                 // check the application certificate.
                 application.CheckApplicationInstanceCertificate(false, 0).Wait();

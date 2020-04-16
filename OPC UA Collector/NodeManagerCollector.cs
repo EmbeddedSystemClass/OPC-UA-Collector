@@ -39,7 +39,7 @@ using System.Reflection;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using ServerCollector;
-
+using ServerCollector.old;
 
 namespace ServerCollector
 {
@@ -224,12 +224,12 @@ namespace ServerCollector
         public void addNode(BaseInstanceState node , NodeId parentId)
         {
             NodeState parent = Find(parentId);
+            if (Find(node.NodeId) != null) { 
+                node.NodeId = getFreeNodeId(node.NodeId.Identifier.GetType() ==typeof(int)?(uint)node.NodeId.Identifier:10000);
+            }
             parent.AddChild(node);
             AddPredefinedNode(SystemContext, node);
         }
-        #endregion
-        
-        #region Controller Methods
         public ushort addNamespace(string url)
         {
             return SystemContext.NamespaceUris.GetIndexOrAppend(url);
@@ -243,6 +243,7 @@ namespace ServerCollector
             }
             return indices;
         }
+        
         #endregion
 
         // methods called by external clients via opc ua
@@ -273,7 +274,7 @@ namespace ServerCollector
         {
             ClientOPC cl;
             string token = inputsArguments[0].ToString();
-            if (!ServerCollector.Clients.token_Client.TryGetValue(token, out cl))
+            if (!Clients.token_Client.TryGetValue(token, out cl))
             {
                 return StatusCodes.BadAggregateInvalidInputs;
             }
@@ -282,6 +283,7 @@ namespace ServerCollector
         }
         public ServiceResult method_getObjectRootNode(ISystemContext context, MethodState method, IList<object> inputsArguments, IList<object> outputArguments)
         {
+            throw new NotImplementedException();
             ClientOPC client = Clients.clients[0];
             //try to get client
             if (!Clients.session_client.TryGetValue(context.SessionId, out client))
@@ -292,19 +294,15 @@ namespace ServerCollector
             //test if client root node is alread set
             if (!client.isRootset||true)
             {
-                addCollectorRootObject(client,"test");
+                //addCollectorRootObject(client,"test");
             }
-            //NodeState nodest = client.RootObject;
-            //FileStream fs = new FileStream(context.SessionId.ToString() + ".xml",FileMode.Create);
-            //XmlEncoder xml = new XmlEncoder(ServiceMessageContext.GlobalContext);
-            //nodest.SaveAsXml(context,xml);
-            //Debug.WriteLine(xml.ToString());
 
             Debug.WriteLine("called: " + method.DisplayName.Text + " ; getObjectRootNode");
             return StatusCodes.BadNotImplemented;
         }
         public ServiceResult method_registerServer(ISystemContext contex, MethodState method, IList<object> inputArguments, IList<object> outputarguments)
         {
+            throw new NotImplementedException();
             IEnumerator<object> inputs = inputArguments.GetEnumerator();
             inputs.MoveNext();
             string token=ClientToken.getClientToken(inputs.Current.ToString());
@@ -317,8 +315,9 @@ namespace ServerCollector
             client = new ClientOPC(inputArguments[0], contex.SessionId);
             Clients.addClient(client);
             outputarguments[0] = client.token;
-            addCollectorRootObject(client,inputs.MoveNext()?inputs.Current.ToString():contex.SessionId.ToString());
+            //addCollectorRootObject(client,inputs.MoveNext()?inputs.Current.ToString():contex.SessionId.ToString());
             return StatusCodes.Good;
+            
         }
         #endregion
 
@@ -437,22 +436,32 @@ namespace ServerCollector
             }
             //machines Folder
             machines = (BaseObjectState)nodeDic[new NodeId((int)Collector.ObjectsIDs.FolderMachines, NamespaceIndex)];
-            //ControllerObjectRoot ObjectType
-            ControllerObject = (BaseObjectTypeState)nodeDic[new NodeId((int)Collector.ObjectsIDs.TypeControllerObjectRoot, NamespaceIndex)];
         }
         private void createCollectorObject()
         {
             throw new NotImplementedException();
         }
-        private void addCollectorRootObject(ClientOPC client, string name)
+        public BaseObjectState addChildRootNode(string name, BaseObjectState parentNode= null)
         {
-            BaseObjectState objRoot = new BaseObjectState(machines);
-            objRoot.TypeDefinitionId = ControllerObject.NodeId;
+            if (parentNode==null)
+            {
+                parentNode = machines;
+            }
+            BaseObjectState objRoot = new BaseObjectState(parentNode);
             objRoot.DisplayName = name;
-            objRoot.BrowseName = new QualifiedName(name, NamespaceIndex);
-            objRoot.NodeId = new NodeId(1234);
-            machines.AddChild(objRoot);
-
+            objRoot.BrowseName = new QualifiedName(name, 3);
+            objRoot.NodeId = getFreeNodeId(2000,1000);
+            addNode(objRoot, parentNode);
+            return objRoot;
+        }
+        public NodeId getFreeNodeId(uint start=2000,uint step=1)
+        {
+            while (start < uint.MaxValue - 1)
+            {
+                if (Find(new NodeId(start))==null) return new NodeId(start);
+                start += step;
+            }
+            throw new Exception("no available NodeId!");
         }
         #endregion
 
@@ -461,8 +470,6 @@ namespace ServerCollector
         public BaseObjectState ObjectRoot { private set; get; }
         // machine node, where all machine data of other opc's are stored
         public BaseObjectState machines { private set; get; }
-        // Controller Object (old structure)
-        public BaseObjectTypeState ControllerObject;
         IReference[] externalRef;
         #endregion
     }

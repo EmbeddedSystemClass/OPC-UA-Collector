@@ -87,6 +87,17 @@ namespace ServerCollector
         /// sipmply return the systemcontext of the server
         /// </summary>
         /// <returns>systemcontext of the server</returns>
+        public void addNode(BaseInstanceState node, NodeId parentId)
+        {
+            this.collectorNodeManager.addNode(node, parentId);
+        }
+        public void registerServer(string Name, object identifier, Opc.Ua.Client.Session client_session)
+        {
+            if (child_server.ContainsKey(identifier)) throw new Exception("Child Server with identifier already exist");
+            Client.Client client = new Client.Client(Name, identifier, client_session);
+            child_server.Add(identifier,client);
+            collectorNodeManager.addChildRootNode(Name);
+        }
         public SystemContext GetSystemContext()
         {
             return collectorNodeManager.SystemContext;
@@ -101,7 +112,14 @@ namespace ServerCollector
         }
         #endregion
         #region private fields
-        public NodeManagerCollector collectorNodeManager { private set; get; }
+        public BaseObjectState machineNode { 
+            get
+            {
+                return this.collectorNodeManager.machines;
+            }
+        }
+        private NodeManagerCollector collectorNodeManager;
+        private Dictionary<object, Client.Client> child_server= new Dictionary<object, Client.Client>();
         #endregion
     }
 }

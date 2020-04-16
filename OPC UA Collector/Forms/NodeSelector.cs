@@ -31,6 +31,7 @@ namespace ServerCollector.Forms
         private void selected_click(object sender , EventArgs e)
         {
             callOnSelected(this.serverBrowseNodeCTRL1.getSelectedNode());
+            this.Close();
         }
         /// <summary>
         /// call onSelected methods
