@@ -32,9 +32,12 @@ namespace ServerCollector
         }
         private void Client_ConnectComplete(object sender, EventArgs e)
         {
+            this.isServerReg.Checked = false;
+
             try
             {
                 Opc.Ua.Client.Controls.ConnectServerCtrl client = (Opc.Ua.Client.Controls.ConnectServerCtrl)sender;
+                this.isServerReg.Checked=m_server.isClientRegistered(client.ServerUrl);
                 if (client.Session == null)
                 {
                     return;
@@ -82,15 +85,43 @@ namespace ServerCollector
         {
 
             ReferenceDescription selectedNode = this.BrowseCTRL.SelectedNode;
+            if (selectedNode.NodeClass == NodeClass.Variable)
+            {
+                ReadValueId nodeToRead = new ReadValueId();
+                nodeToRead.NodeId = (NodeId)selectedNode.NodeId;
+                nodeToRead.AttributeId = Attributes.Value;
+                nodeToRead.Handle = selectedNode;
+                ReadValueIdCollection nodesToRead = new ReadValueIdCollection();
+                nodesToRead.Add(nodeToRead);
 
-            BaseObjectState child = new BaseObjectState(parentNode);
-            uint nodeid_ident;
-            if (UInt32.TryParse(selectedNode.NodeId.Identifier.ToString(), out nodeid_ident)) child.NodeId = new NodeId(nodeid_ident);
-            else child.NodeId = new NodeId(selectedNode.NodeId.Identifier.ToString());
-            child.BrowseName = selectedNode.BrowseName;
-            child.DisplayName = child.BrowseName.Name;
-            //parentNode.AddChild(child);
-            this.m_server.addNode(child, parentNode.NodeId);
+                DataValueCollection results = null;
+                DiagnosticInfoCollection diagnosticInfos = null;
+
+                this.connectServerCtrl1.Session.Read(null, 0, TimestampsToReturn.Neither, nodesToRead, out results, out diagnosticInfos);
+                ClientBase.ValidateResponse(results, nodesToRead);
+                ClientBase.ValidateDiagnosticInfos(diagnosticInfos, nodesToRead);
+
+                TypeInfo varInfo = TypeInfo.Construct(results[0].Value);
+
+                BaseVariableState varNode = new BaseDataVariableState(parentNode);
+                varNode.ValueRank = varInfo.ValueRank;
+                varNode.WrappedValue = results[0].WrappedValue;
+                varNode.NodeId = (NodeId)selectedNode.NodeId;
+                varNode.BrowseName = new QualifiedName(selectedNode.DisplayName.Text,(ushort) m_server.getNamespaceIndex(this.connectServerCtrl1.Session.NamespaceUris.GetString(selectedNode.BrowseName.NamespaceIndex)));
+                varNode.DisplayName = varNode.BrowseName.Name;
+                m_server.addNode(varNode, parentNode.NodeId);
+                m_server.addVariableConnection(varNode, selectedNode, this.connectServerCtrl1.ServerUrl);
+            }
+            else
+            {
+                BaseObjectState child = new BaseObjectState(parentNode);
+                uint nodeid_ident;
+                if (UInt32.TryParse(selectedNode.NodeId.Identifier.ToString(), out nodeid_ident)) child.NodeId = new NodeId(nodeid_ident);
+                else child.NodeId = new NodeId(selectedNode.NodeId.Identifier.ToString());
+                child.BrowseName = selectedNode.BrowseName;
+                child.DisplayName = child.BrowseName.Name;
+                this.m_server.addNode(child, parentNode.NodeId);
+            }
         }
 
         private void updateView(object sender, PaintEventArgs e)
@@ -119,6 +150,7 @@ namespace ServerCollector
             try
             {
                 m_server.registerServer(input.getInputText(), connectServerCtrl1.ServerUrl, connectServerCtrl1.Session);
+                this.isServerReg.Checked = true;
             }catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);

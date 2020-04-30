@@ -95,7 +95,7 @@ namespace ServerCollector
         /// </remarks>
         public override void CreateAddressSpace(IDictionary<NodeId, IList<IReference>> externalReferences)
         {
-
+            
             lock (Lock)
             {
                 // ensure the process object can be found via the server object. 
@@ -225,10 +225,15 @@ namespace ServerCollector
         {
             NodeState parent = Find(parentId);
             if (Find(node.NodeId) != null) { 
-                node.NodeId = getFreeNodeId(node.NodeId.Identifier.GetType() ==typeof(int)?(uint)node.NodeId.Identifier:10000);
+                node.NodeId = getFreeNodeId(node.NodeId.NamespaceIndex, node.NodeId.Identifier.GetType() ==typeof(int)?(uint)node.NodeId.Identifier:10000);
             }
             parent.AddChild(node);
-            AddPredefinedNode(SystemContext, node);
+            AddPredefinedNode(SystemContext, parent);
+            parent.AddReference(ReferenceTypes.HasComponent, true, node.NodeId);
+            IDictionary<NodeId, List<IReference>> refs = new Dictionary<NodeId, List<IReference>>();
+            //IReference iref = parent.ref;
+            //refs.Add(parent.NodeId, parent.GetReferences(SystemContext));
+            //AddReferences();
         }
         public ushort addNamespace(string url)
         {
@@ -447,18 +452,41 @@ namespace ServerCollector
             {
                 parentNode = machines;
             }
-            BaseObjectState objRoot = new BaseObjectState(parentNode);
+            /*BaseObjectState objRoot = new BaseObjectState(parentNode);
             objRoot.DisplayName = name;
             objRoot.BrowseName = new QualifiedName(name, 3);
-            objRoot.NodeId = getFreeNodeId(2000,1000);
-            addNode(objRoot, parentNode);
-            return objRoot;
+            //objRoot.NodeId = getFreeNodeId(3,2000,1000);
+            objRoot.NodeId = new NodeId(name, 3);
+            objRoot.SymbolicName = name;
+            objRoot.ReferenceTypeId = ReferenceTypes.Organizes;
+            objRoot.TypeDefinitionId = ObjectTypeIds.BaseObjectType;
+            objRoot.WriteMask = AttributeWriteMask.None;
+            objRoot.UserWriteMask = AttributeWriteMask.None;
+            objRoot.EventNotifier = EventNotifiers.None;*/
+
+            FolderState objfolder = new FolderState(parentNode);
+
+            objfolder.SymbolicName = name;
+            objfolder.ReferenceTypeId = ReferenceTypes.Organizes;
+            objfolder.TypeDefinitionId = ObjectTypeIds.FolderType;
+            objfolder.NodeId = new NodeId(2003, NamespaceIndex);
+            objfolder.BrowseName = new QualifiedName(name, NamespaceIndex);
+            objfolder.DisplayName = new LocalizedText(name);
+            objfolder.WriteMask = AttributeWriteMask.None;
+            objfolder.UserWriteMask = AttributeWriteMask.None;
+            objfolder.EventNotifier = EventNotifiers.None;
+            if (parentNode != null)
+            {
+                parentNode.AddChild(objfolder);
+            }
+            AddPredefinedNode(SystemContext, machines);
+            return objfolder;
         }
-        public NodeId getFreeNodeId(uint start=2000,uint step=1)
+        public NodeId getFreeNodeId(ushort namespaceIndex,uint start=2000,uint step=1)
         {
             while (start < uint.MaxValue - 1)
             {
-                if (Find(new NodeId(start))==null) return new NodeId(start);
+                if (Find(new NodeId(start))==null) return new NodeId(start,namespaceIndex);
                 start += step;
             }
             throw new Exception("no available NodeId!");

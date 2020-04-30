@@ -79,7 +79,7 @@ namespace ServerCollector.Forms
         /// <param name="parent">parent node where to subordinate the children nodes</param>
         private void addChildrenIter(IList<BaseInstanceState> children,TreeViewNode parent)
         {
-            foreach(BaseObjectState child in children)
+            foreach(BaseInstanceState child in children)
             {
                 TreeViewNode childNode = new TreeViewNode(child);
                 parent.Nodes.Add(childNode);

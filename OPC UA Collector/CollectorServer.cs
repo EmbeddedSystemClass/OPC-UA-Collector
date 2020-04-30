@@ -91,12 +91,28 @@ namespace ServerCollector
         {
             this.collectorNodeManager.addNode(node, parentId);
         }
+        public NamespaceTable getNamespaces()
+        {
+            return collectorNodeManager.SystemContext.NamespaceUris;
+        }
+        public int getNamespaceIndex(string namespaceUri)
+        {
+            return collectorNodeManager.SystemContext.NamespaceUris.GetIndex(namespaceUri);
+        }
         public void registerServer(string Name, object identifier, Opc.Ua.Client.Session client_session)
         {
             if (child_server.ContainsKey(identifier)) throw new Exception("Child Server with identifier already exist");
             Client.Client client = new Client.Client(Name, identifier, client_session);
             child_server.Add(identifier,client);
-            collectorNodeManager.addChildRootNode(Name);
+            collectorNodeManager.addChildRootNode(Name,machineNode);
+        }
+        public void addVariableConnection(BaseVariableState collectorNode,ReferenceDescription item, object clientIdentifier)
+        {
+            child_server[clientIdentifier].addConnection(collectorNode, item);
+        }
+        public bool isClientRegistered(object identifier)
+        {
+            return child_server.ContainsKey(identifier);
         }
         public SystemContext GetSystemContext()
         {

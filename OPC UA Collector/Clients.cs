@@ -21,14 +21,54 @@ namespace ServerCollector.Client
         object identifier;
         NodeId rootNode;
         Session session;
-        List<Subscription> m_subscribtion;
+        Dictionary<MonitoredItem, BaseVariableState> connectedVariables;
         #endregion
 
         public Client(string Name, object Identifier, Session session)
         {
+            connectedVariables = new Dictionary<MonitoredItem, BaseVariableState>();
             this.name = Name;
             this.identifier = Identifier;
             this.session = Session.Recreate(session);
+            
+            // setting up the subscription
+            Subscription subscription = new Subscription();
+            subscription.PublishingEnabled = true;
+            subscription.PublishingInterval = 1000;
+            subscription.Priority = 1;
+            subscription.KeepAliveCount = 10;
+            subscription.LifetimeCount = 20;
+            subscription.MaxNotificationsPerPublish = 1000;
+            session.AddSubscription(subscription);
+            subscription.Create();
+        }
+        public void addConnection(BaseVariableState collectorNode, ReferenceDescription clientNode)
+        {
+            // test if clientNode is Variable
+            if (clientNode.NodeClass== NodeClass.Variable && collectorNode.GetType()==typeof(VariableNode))
+            {
+                MonitoredItem monitoredItem = new MonitoredItem();
+                monitoredItem.StartNodeId = ExpandedNodeId.ToNodeId(clientNode.NodeId,session.NamespaceUris);
+                monitoredItem.AttributeId = Attributes.Value;
+                monitoredItem.Notification += new MonitoredItemNotificationEventHandler(connectVariable);
+                session.Subscriptions.ToArray()[0].AddItem(monitoredItem);
+                session.Subscriptions.ToArray()[0].ApplyChanges();
+                connectedVariables.Add(monitoredItem, collectorNode);
+            }
+        }
+        private void connectVariable(Opc.Ua.Client. MonitoredItem item, Opc.Ua.Client.MonitoredItemNotificationEventArgs e)
+        {
+            BaseVariableState varNode;
+            if(connectedVariables.TryGetValue(item,out varNode))
+            {
+                MonitoredItemNotification datachange = e.NotificationValue as MonitoredItemNotification;
+                if (datachange == null) return;
+                varNode.Value = datachange.Value.WrappedValue;
+            }
+            else
+            {
+                throw new Exception("monitored item is not connected to a Node in Collector Nodes");
+            }
         }
     }
 }
