@@ -39,7 +39,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.isServerReg = new System.Windows.Forms.CheckBox();
             this.regServerButton = new System.Windows.Forms.Button();
-            this.connectNode = new System.Windows.Forms.Button();
             this.buttonNamespaces = new System.Windows.Forms.Button();
             this.buttonNamespace = new System.Windows.Forms.Button();
             this.addToCollectorModel = new System.Windows.Forms.Button();
@@ -117,7 +116,6 @@
             this.NodeInspector.Controls.Add(this.button1);
             this.NodeInspector.Controls.Add(this.isServerReg);
             this.NodeInspector.Controls.Add(this.regServerButton);
-            this.NodeInspector.Controls.Add(this.connectNode);
             this.NodeInspector.Controls.Add(this.buttonNamespaces);
             this.NodeInspector.Controls.Add(this.buttonNamespace);
             this.NodeInspector.Controls.Add(this.addToCollectorModel);
@@ -161,15 +159,6 @@
             this.regServerButton.Text = "register Server";
             this.regServerButton.UseVisualStyleBackColor = true;
             this.regServerButton.Click += new System.EventHandler(this.regServerButton_Click);
-            // 
-            // connectNode
-            // 
-            this.connectNode.Location = new System.Drawing.Point(603, 186);
-            this.connectNode.Name = "connectNode";
-            this.connectNode.Size = new System.Drawing.Size(109, 23);
-            this.connectNode.TabIndex = 18;
-            this.connectNode.Text = "add and connect";
-            this.connectNode.UseVisualStyleBackColor = true;
             // 
             // buttonNamespaces
             // 
@@ -305,7 +294,7 @@
             // 
             this.ServerDiagnosticsCTRL.Location = new System.Drawing.Point(0, 0);
             this.ServerDiagnosticsCTRL.Name = "ServerDiagnosticsCTRL";
-            this.ServerDiagnosticsCTRL.Size = new System.Drawing.Size(340, 502);
+            this.ServerDiagnosticsCTRL.Size = new System.Drawing.Size(340, 257);
             this.ServerDiagnosticsCTRL.TabIndex = 0;
             // 
             // browseTreeCtrlBindingSource
@@ -352,7 +341,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox isServerReg;
         private System.Windows.Forms.Button regServerButton;
-        private System.Windows.Forms.Button connectNode;
         private System.Windows.Forms.Button buttonNamespaces;
         private System.Windows.Forms.Button buttonNamespace;
         private System.Windows.Forms.Button addToCollectorModel;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Opc.Ua.Client;
 using Opc.Ua;
 using System.Security.Cryptography;
-
+using System.Diagnostics;
 namespace ServerCollector.Client
 {
     public class Clients
@@ -29,7 +29,7 @@ namespace ServerCollector.Client
             connectedVariables = new Dictionary<MonitoredItem, BaseVariableState>();
             this.name = Name;
             this.identifier = Identifier;
-            this.session = Session.Recreate(session);
+            this.session = session;
             
             // setting up the subscription
             Subscription subscription = new Subscription();
@@ -45,15 +45,26 @@ namespace ServerCollector.Client
         public void addConnection(BaseVariableState collectorNode, ReferenceDescription clientNode)
         {
             // test if clientNode is Variable
-            if (clientNode.NodeClass== NodeClass.Variable && collectorNode.GetType()==typeof(VariableNode))
+            if (clientNode.NodeClass== NodeClass.Variable )//&& collectorNode.GetType()==typeof(VariableNode))
             {
                 MonitoredItem monitoredItem = new MonitoredItem();
                 monitoredItem.StartNodeId = ExpandedNodeId.ToNodeId(clientNode.NodeId,session.NamespaceUris);
                 monitoredItem.AttributeId = Attributes.Value;
                 monitoredItem.Notification += new MonitoredItemNotificationEventHandler(connectVariable);
-                session.Subscriptions.ToArray()[0].AddItem(monitoredItem);
-                session.Subscriptions.ToArray()[0].ApplyChanges();
+                Debug.Print("Client.cs: not fully implemented new session, just easily created");
+                Subscription sub = new Subscription();
+                sub.PublishingEnabled = true;
+                sub.PublishingInterval = 1000;
+                sub.Priority = 1;
+                sub.KeepAliveCount = 10;
+                sub.LifetimeCount = 20;
+                sub.MaxNotificationsPerPublish = 1000;
+
+                sub.AddItem(monitoredItem);
+                session.AddSubscription(sub);
+                sub.Create();
                 connectedVariables.Add(monitoredItem, collectorNode);
+
             }
         }
         private void connectVariable(Opc.Ua.Client. MonitoredItem item, Opc.Ua.Client.MonitoredItemNotificationEventArgs e)

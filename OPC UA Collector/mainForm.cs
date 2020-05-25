@@ -6,6 +6,9 @@ using Opc.Ua.Configuration;
 using Opc.Ua.Server;
 using Opc.Ua.Client;
 using Opc.Ua;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace ServerCollector
 {
     public partial class mainForm : Form
@@ -143,18 +146,46 @@ namespace ServerCollector
 
         private void regServerButton_Click(object sender, EventArgs e)
         {
+            if (m_server.isClientRegistered(connectServerCtrl1.ServerUrl))
+            {
+                MessageBox.Show("OPC UA Server already registered with identifier: \n" + connectServerCtrl1.ServerUrl.ToString());
+                return;
+
+            } 
             ServerCollector.Forms.InputDialog input = new Forms.InputDialog("Name of the Server with URL ("+connectServerCtrl1.ServerUrl+"):");
             
             input.ShowDialog();
 
             try
             {
-                m_server.registerServer(input.getInputText(), connectServerCtrl1.ServerUrl, connectServerCtrl1.Session);
+                
+                m_server.registerServer(input.getInputText(), connectServerCtrl1.ServerUrl, createSession(connectServerCtrl1.ServerUrl).Result);
                 this.isServerReg.Checked = true;
             }catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        private async Task<Opc.Ua.Client.Session> createSession(string url)
+        {
+            // select the best endpoint.
+            EndpointDescription endpointDescription = CoreClientUtils.SelectEndpoint(url, true, 5000);
+
+            EndpointConfiguration endpointConfiguration = EndpointConfiguration.Create(m_configuration);
+            ConfiguredEndpoint endpoint = new ConfiguredEndpoint(null, endpointDescription, endpointConfiguration);
+            
+            UserIdentity user = new UserIdentity();
+
+            Opc.Ua.Client.Session session = await Opc.Ua.Client.Session.Create(
+                m_configuration,
+                endpoint,
+                false,
+                false,
+                "Collector Server",
+                60000,
+                user,
+                null);
+            return session;
         }
     }
 }
